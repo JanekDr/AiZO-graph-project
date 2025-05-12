@@ -6,7 +6,7 @@ Projekt w języku C++ realizujący wybrane algorytmy grafowe bez użycia gotowyc
 
 ### 📊 Reprezentacja grafów:
 - Lista sąsiedztwa oparta na strukturze `DynamicArray`
-- (opcjonalnie) Macierz incydencji
+- Macierz incydencji
 
 ### 📈 Algorytmy:
 #### Minimalne drzewo rozpinające (MST)
