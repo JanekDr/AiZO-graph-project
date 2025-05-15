@@ -1,3 +1,6 @@
+#ifndef DYNAMIC_ARRAY_HPP
+#define DYNAMIC_ARRAY_HPP
+
 #include <iostream>
 #include <algorithm>
 #include <functional>
@@ -70,3 +73,5 @@ public:
         return size;
     }    
 };
+
+#endif // DYNAMIC_ARRAY_HPP
