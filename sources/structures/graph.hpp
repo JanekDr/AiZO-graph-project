@@ -23,9 +23,9 @@ public:
         }
     }
 
-    void addEdge(int u, int v, int weight) {
+    void addEdge(int u, int v, int weight, bool directed = false) {
         adjacencyList.get(u)->add({v, weight});
-        adjacencyList.get(v)->add({u, weight}); // dla grafu nieskierowanego
+        if (!directed)adjacencyList.get(v)->add({u, weight}); // dla grafu nieskierowanego
     }
 
     void printGraph() {

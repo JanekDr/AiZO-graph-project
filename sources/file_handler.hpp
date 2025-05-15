@@ -24,7 +24,7 @@ public:
         if (inputFile.is_open()) inputFile.close();
     }
 
-    Graph* readGraphFromFile() {
+    Graph* readGraphFromFile(bool directed = false) {
         if (!inputFile) {
             cerr << "Błąd: Plik wejściowy nie jest otwarty!" << endl;
             return nullptr;
@@ -43,7 +43,7 @@ public:
                 delete graph;
                 return nullptr;
             }
-            graph->addEdge(from, to, weight);
+            graph->addEdge(from, to, weight, directed);
         }
 
         return graph;
