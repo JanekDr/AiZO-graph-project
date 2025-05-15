@@ -30,7 +30,7 @@ public:
 
     void printGraph() {
         for (int i = 0; i < numVertices; ++i) {
-            std::cout << "Wierzchołek " << i << ": ";
+            std::cout << "Wierzcholek " << i << ": ";
             DynamicArray<Edge>* list = adjacencyList.get(i);
             for (size_t j = 0; j < list->getSize(); ++j) {
                 Edge e = list->get(j);
