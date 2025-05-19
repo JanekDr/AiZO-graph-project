@@ -7,12 +7,13 @@
 using namespace std;
 
 int main(){
-    FileHandler fileHandler("../data/test_graph.txt");
+    FileHandler fileHandler("../data/test_directed_graph.txt");
     Timer timer;
     timer.start();
-    Graph* graph = fileHandler.readGraphFromFile();
+    Graph* graph = fileHandler.readGraphFromFile(true);
     timer.stop();
     cout<< "Time taken to read the graph: " << timer.result() << " ms" << endl;
-    graph->printGraph();
+    graph->printAdjacencyList();
+    graph->printIncidenceMatrix();
     return 0;
 };
