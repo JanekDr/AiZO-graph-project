@@ -29,6 +29,18 @@ public:
         if (!directed)adjacencyList.get(v)->add({u, weight}); // dla grafu nieskierowanego
     }
 
+    int getNumVertices() const {
+        return numVertices;
+    }
+
+    DynamicArray<Edge>* getAdjacencyList(int vertex) const {
+        if (vertex < 0 || vertex >= numVertices) {
+            std::cerr << "Blad: Indeks wierzcholka poza zakresem!" << std::endl;
+            return nullptr;
+        }
+        return adjacencyList.get(vertex);
+    }
+
     void printAdjacencyList() {
         for (int i = 0; i < numVertices; ++i) {
             std::cout << "Wierzcholek " << i << ": ";

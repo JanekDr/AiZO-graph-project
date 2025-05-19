@@ -3,17 +3,20 @@
 #include "structures/graph.hpp"
 #include "structures/dynamic_array.hpp"
 #include "Timer.h"
+#include "algorithms/prim.hpp"
 
 using namespace std;
 
 int main(){
-    FileHandler fileHandler("../data/test_directed_graph.txt");
+    FileHandler fileHandler("../data/prim_data.txt");
     Timer timer;
+    Graph* graph = fileHandler.readGraphFromFile();
+    Prim prim;
     timer.start();
-    Graph* graph = fileHandler.readGraphFromFile(true);
+    Graph* mst = prim.run(graph);
     timer.stop();
-    cout<< "Time taken to read the graph: " << timer.result() << " ms" << endl;
-    graph->printAdjacencyList();
-    graph->printIncidenceMatrix();
+    cout<<"Time: "<<timer.result()<<"ms"<<endl;
+    mst->printAdjacencyList();
+
     return 0;
 };
