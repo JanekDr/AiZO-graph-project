@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "dynamic_array.hpp"
-#include "Edge.hpp"
+#include "edge.hpp"
 
 
 class Graph {
@@ -25,8 +25,8 @@ public:
     }
 
     void addEdge(int u, int v, int weight, bool directed = false) {
-        adjacencyList.get(u)->add({v, weight});
-        if (!directed)adjacencyList.get(v)->add({u, weight}); // dla grafu nieskierowanego
+        adjacencyList.get(u)->add({u, v, weight});
+        if (!directed)adjacencyList.get(v)->add({v, u, weight}); // dla grafu nieskierowanego
     }
 
     int getNumVertices() const {
