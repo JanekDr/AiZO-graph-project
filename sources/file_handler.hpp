@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include "structures/graph.hpp"
+#include "structures/graph_matrix.hpp"
 
 using namespace std;
 
@@ -24,7 +25,7 @@ public:
         if (inputFile.is_open()) inputFile.close();
     }
 
-    Graph* readGraphFromFile(bool directed = false) {
+    Graph* getGraphListFromFile(bool directed = false) {
         if (!inputFile) {
             cerr << "Błąd: Plik wejściowy nie jest otwarty!" << endl;
             return nullptr;
@@ -47,6 +48,25 @@ public:
         }
 
         return graph;
+    }
+
+    GraphMatrix* getGraphMatrixFromFile(bool directed = false) {
+        if (!inputFile) {
+            cerr << "Błąd: Plik wejściowy nie jest otwarty!" << endl;
+            return nullptr;
+        }
+
+        int numEdges, numVertices;
+        inputFile >> numEdges >> numVertices;
+
+        GraphMatrix* graphMatrix = new GraphMatrix(numVertices, numEdges, directed);
+
+        int u, v, weight;
+        while (inputFile >> u >> v >> weight){
+            graphMatrix->addEdge(u, v, weight, directed);
+        }
+
+        return graphMatrix;
     }
 };
 
