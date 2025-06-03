@@ -1,36 +1,36 @@
-#ifndef KRUSKAL_HPP
-#define KRUSKAL_HPP
+#ifndef KRUSKAL_MATRIX_HPP
+#define KRUSKAL_MATRIX_HPP
 
 #include <iostream>
-#include "../structures/graph.hpp"
-#include "../structures/dynamic_array.hpp"
+#include "../structures/graph_matrix.hpp"
 #include "../structures/edge.hpp"
+#include "../structures/dynamic_array.hpp"
 
-class Kruskal {
+class KruskalMatrix {
 public:
-    Kruskal() = default;
-    ~Kruskal() = default;
+    KruskalMatrix() = default;
+    ~KruskalMatrix() = default;
 
-    // Zwraca MST lub nullptr
-    Graph* run(Graph* graph) {
-        if (!graph) return nullptr;
+    GraphMatrix* run(GraphMatrix* graphMatrix) {
+        if (!graphMatrix) return nullptr;
 
-        int n = graph->getNumVertices();
+        int 
+      n = graphMatrix->getNumVertices();
         if (n == 0) return nullptr;
 
-        // 1. lista krawedzi
-        DynamicArray<Edge>* edges = new DynamicArray<Edge>(n * (n - 1) / 2);  // Maksymalna liczba krawędzi
+        // Zbieramy wszystkie krawedzie z macierzy incydencji
+        DynamicArray<Edge>* edges = new DynamicArray<Edge>(n * (n - 1) / 2);
         for (int u = 0; u < n; ++u) {
-            DynamicArray<Edge>* neighbors = graph->getAdjacencyList(u);
-            for (size_t i = 0; i < neighbors->getSize(); ++i) {
-                Edge e = neighbors->get(i);
-                if (u < e.to) {
-                    edges->add(Edge(u, e.to, e.weight));
+            DynamicArray<int>* row = graphMatrix->getIncidenceMatrix(u);
+            for (int v = u + 1; v < n; ++v) {
+                int weight = row->get(v);
+                if (weight > 0) {
+                    edges->add(Edge(u, v, weight));
                 }
             }
         }
 
-        // 2. Sortujemy krawędzie po wagach (rosnąco)
+        // Sortowanie krawędzi po wagach rosnąco
         for (int i = 0; i < edges->getSize(); ++i) {
             for (int j = i + 1; j < edges->getSize(); ++j) {
                 if (edges->get(i).weight > edges->get(j).weight) {
@@ -39,7 +39,7 @@ public:
             }
         }
 
-        // 3. Inicjalizujemy tablice dla union-find
+        // Union-Find struktura
         int* parent = new int[n];
         int* rank = new int[n];
         for (int i = 0; i < n; ++i) {
@@ -47,41 +47,36 @@ public:
             rank[i] = 0;
         }
 
-        // 4. Tworzymy MST
-        Graph* mst = new Graph(n);
+        // Tworzymy wynikowy graf
+        GraphMatrix* mst = new GraphMatrix(n, edges->getSize(), false);
         for (size_t i = 0; i < edges->getSize(); ++i) {
             int u = edges->get(i).from;
             int v = edges->get(i).to;
-            // Jeśli nie tworzymy cyklu, dodajemy krawędź do MST
             if (find(u, parent) != find(v, parent)) {
                 mst->addEdge(u, v, edges->get(i).weight);
                 unionSets(u, v, parent, rank);
             }
         }
 
-        // Czyszczenie pamięci
         delete[] parent;
         delete[] rank;
         delete edges;
 
-        return mst;  // Zwracamy MST
+        return mst;
     }
 
 private:
-    // Funkcja do znajdowania korzenia zbioru w union-find
     int find(int u, int* parent) {
         if (parent[u] != u) {
-            parent[u] = find(parent[u], parent);  // kompresja ścieżki
+            parent[u] = find(parent[u], parent);
         }
         return parent[u];
     }
 
-    // Funkcja do łączenia dwóch zbiorów
     void unionSets(int u, int v, int* parent, int* rank) {
         int rootU = find(u, parent);
         int rootV = find(v, parent);
         if (rootU != rootV) {
-            // Złączenie dwóch drzew
             if (rank[rootU] < rank[rootV])
                 parent[rootU] = rootV;
             else if (rank[rootU] > rank[rootV])
@@ -94,4 +89,4 @@ private:
     }
 };
 
-#endif
+#endif // KRUSKAL_MATRIX_HPP
