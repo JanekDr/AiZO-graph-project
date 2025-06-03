@@ -7,6 +7,7 @@
 #include "algorithms/prim.hpp"
 #include "algorithms/kruskal.hpp"
 #include "algorithms/kruskal_matrix.hpp"
+#include "algorithms/prim_matrix.hpp"
 
 using namespace std;
 
@@ -15,18 +16,16 @@ int main(){
     FileHandler fileHandler2("../data/prim_data.txt");
     Graph* graph = fileHandler.getGraphListFromFile();
     GraphMatrix* graphMatrix = fileHandler2.getGraphMatrixFromFile();
-    Kruskal kruskal;
-    KruskalMatrix kruskalMatrix;
-    Graph* kruskal_list = kruskal.run(graph);
-    GraphMatrix* kruskal_matrix = kruskalMatrix.run(graphMatrix);
+    Prim prim;
+    PrimMatrix primMatrix;
+    Graph* prim_list = prim.run(graph);
+    GraphMatrix* prim_matrix = primMatrix.run(graphMatrix);
 
 
-    kruskal_list->printIncidenceMatrix();
+    prim_list->printIncidenceMatrix();
     cout<<"##########################"<<endl;
-
-    graphMatrix->printIncidenceMatrix();
     cout<<"##########################"<<endl;
-    kruskal_matrix->printIncidenceMatrix();
+    prim_matrix->printIncidenceMatrix();
 
     return 0;
-};
+}

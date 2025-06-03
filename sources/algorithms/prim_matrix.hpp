@@ -1,21 +1,20 @@
-#ifndef PRIM_HPP
-#define PRIM_HPP
+#ifndef PRIM_MATRIX_HPP
+#define PRIM_MATRIX_HPP
 
 #include <limits>
-#include "../structures/graph.hpp"
+#include "../structures/graph_matrix.hpp"
 #include "../structures/dynamic_array.hpp"
 #include "../structures/edge.hpp"
 
-class Prim {
+class PrimMatrix {
 public:
-    Prim() = default;
-    ~Prim() = default;
+    PrimMatrix() = default;
+    ~PrimMatrix() = default;
 
-    // Zwraca MST lub nullptr
-    Graph* run(Graph* graph) {
-        if (!graph) return nullptr;
+    GraphMatrix* run(GraphMatrix* graphMatrix) {
+        if (!graphMatrix) return nullptr;
 
-        int n = graph->getNumVertices();
+        int n = graphMatrix->getNumVertices();
         if (n == 0) return nullptr;
 
         // Tablice pomocnicze
@@ -28,10 +27,9 @@ public:
             parent[i] = -1;
         }
 
-        key[0] = 0;  // Startujemy od wierzchołka 0
+        key[0] = 0; // Start od wierzchołka 0
 
         for (int count = 0; count < n - 1; ++count) {
-            // Znajdź wierzchołek spoza MST o najmniejszym kluczu
             int u = -1;
             int minKey = std::numeric_limits<int>::max();
             for (int v = 0; v < n; ++v) {
@@ -42,7 +40,6 @@ public:
             }
 
             if (u == -1) {
-                // Graf niespójny
                 delete[] inMST;
                 delete[] key;
                 delete[] parent;
@@ -51,24 +48,20 @@ public:
 
             inMST[u] = true;
 
-            // Aktualizuj klucze sąsiadów
-            DynamicArray<Edge>* neighbors = graph->getAdjacencyList(u);
-            for (size_t i = 0; i < neighbors->getSize(); ++i) {
-                Edge e = neighbors->get(i);
-                int v = e.to;
-                int w = e.weight;
-
-                if (!inMST[v] && w < key[v]) {
-                    key[v] = w;
+            DynamicArray<int>* row = graphMatrix->getIncidenceMatrix(u);
+            for (int v = 0; v < n; ++v) {
+                int weight = row->get(v);
+                if (weight > 0 && !inMST[v] && weight < key[v]) {
+                    key[v] = weight;
                     parent[v] = u;
                 }
             }
         }
 
-        // Zbuduj MST
-        Graph* mst = new Graph(n);
-        for (int v = 1; v < n; ++v) {
+        GraphMatrix* mst = new GraphMatrix(n, n, false);
+        for (int v = 0; v < n; ++v) {
             if (parent[v] != -1) {
+                std::cout<< "Adding edge: " << parent[v] << " - " << v << " with weight: " << key[v] << std::endl;
                 mst->addEdge(parent[v], v, key[v]);
             }
         }
@@ -81,4 +74,4 @@ public:
     }
 };
 
-#endif
+#endif // PRIM_MATRIX_HPP
