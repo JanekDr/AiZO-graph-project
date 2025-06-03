@@ -4,6 +4,7 @@
 #include <limits>
 #include "../structures/graph.hpp"
 #include "../structures/dynamic_array.hpp"
+#include "../structures/edge.hpp"
 
 class Prim {
 public:
@@ -54,8 +55,8 @@ public:
             DynamicArray<Edge>* neighbors = graph->getAdjacencyList(u);
             for (size_t i = 0; i < neighbors->getSize(); ++i) {
                 Edge e = neighbors->get(i);
-                int v = e.to;
-                int w = e.weight;
+                int v = e.to;  // Nowe podejście: używamy 'to' jako sąsiada
+                int w = e.weight;  // Nowe podejście: używamy 'weight' jako wagi krawędzi
 
                 if (!inMST[v] && w < key[v]) {
                     key[v] = w;

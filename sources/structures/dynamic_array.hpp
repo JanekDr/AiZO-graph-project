@@ -14,8 +14,11 @@ private:
     size_t capacity;
 
 public:
-    DynamicArray(size_t initialCapacity=5) : size(0), capacity(initialCapacity) {
+    DynamicArray(size_t initialCapacity=5, T initialValue = T()) : size(0), capacity(initialCapacity) {
         data = new T[capacity];
+        for (size_t i = 0; i < capacity; ++i) {
+            data[i] = initialValue;  // Inicjalizujemy wszystkie komórki tablicy
+        }
     }
 
     ~DynamicArray() {
@@ -33,7 +36,7 @@ public:
 
     void add(T value) {
         if (size >= capacity){
-            cout<<"Przekroczono pojemnosc tablicy"<<endl;
+            cout<<"Przekroczono pojemnosc tablicy podczas dodawania"<<endl;
             return;
         }
         data[size++] = value;
@@ -49,7 +52,7 @@ public:
 
     T get(size_t index) const {
         if (index >= size) {
-            cerr << "Błąd: Indeks poza zakresem!" << endl;
+            cerr << "Blad: Indeks poza zakresem, podczas zwracania wartosci tablicy!" << endl;
             return T();
         }
         return data[index];
@@ -57,7 +60,7 @@ public:
 
     void set(size_t index, T value) {
         if (index >= size) {
-            cerr << "Błąd: Indeks poza zakresem!" << endl;
+            cerr << "Blad: Indeks poza zakresem, podczas ustawiania wartosci tablicy!" << endl;
             return;
         }
         data[index] = value;
