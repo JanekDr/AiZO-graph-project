@@ -15,8 +15,7 @@ private:
 public:
     // Konstruktor, inicjalizujący macierz incydencji
     GraphMatrix(int vertices, int edges, bool directed = false)
-        : numVertices(vertices), numEdges(edges), directed(directed),
-        incidenceMatrix(vertices, nullptr)
+        : numVertices(vertices), numEdges(edges), directed(directed),incidenceMatrix(vertices, nullptr)
     {
         for (int i = 0; i < vertices; ++i)
             incidenceMatrix.add(nullptr); // zwiększamy size
