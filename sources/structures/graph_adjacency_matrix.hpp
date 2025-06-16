@@ -1,43 +1,43 @@
-#ifndef GRAPH_MATRIX_HPP
-#define GRAPH_MATRIX_HPP
+#ifndef GRAPH_ADJACENCY_MATRIX_HPP
+#define GRAPH_ADJACENCY_MATRIX_HPP
 
 #include <iostream>
 #include "dynamic_array.hpp"
 #include "edge.hpp"
 
-class GraphMatrix {
+class GraphAdjacencyMatrix {
 private:
     int numVertices;
     int numEdges;
-    DynamicArray<DynamicArray<int>*> incidenceMatrix; // Macierz incydencji
+    DynamicArray<DynamicArray<int>*> adjacencyMatrix; // Macierz sasiedztwa
     bool directed;
 
 public:
-    // Konstruktor, inicjalizujący macierz incydencji
-    GraphMatrix(int vertices, int edges, bool directed = false)
-        : numVertices(vertices), numEdges(edges), directed(directed),incidenceMatrix(vertices, nullptr)
+    // Konstruktor, inicjalizujący macierz sasiedztwa
+    GraphAdjacencyMatrix(int vertices, int edges, bool directed = false)
+        : numVertices(vertices), numEdges(edges), directed(directed),adjacencyMatrix(vertices, nullptr)
     {
         for (int i = 0; i < vertices; ++i)
-            incidenceMatrix.add(nullptr); // zwiększamy size
+            adjacencyMatrix.add(nullptr); // zwiększamy size
 
         for (int i = 0; i < vertices; ++i) {
             DynamicArray<int>* row = new DynamicArray<int>(edges, 0);
             for (int j = 0; j < edges; ++j)
                 row->add(0);  // ręczne wypełnienie, by size == edges
-            incidenceMatrix.set(i, row);
+            adjacencyMatrix.set(i, row);
         }
     }
 
 
 
 
-    ~GraphMatrix() {
-        for (size_t i = 0; i < incidenceMatrix.getSize(); ++i) {
-            delete incidenceMatrix.get(i);
+    ~GraphAdjacencyMatrix() {
+        for (size_t i = 0; i < adjacencyMatrix.getSize(); ++i) {
+            delete adjacencyMatrix.get(i);
         }
     }
 
-    // Dodawanie krawędzi do macierzy incydencji
+    // Dodawanie krawędzi do macierzy sasiedztwa
     void addEdge(int u, int v, int weight, bool directed = false) {
         if (u < 0 || v < 0 || u >= numVertices || v >= numVertices) {
             std::cerr << "Blad: Indeks wierzcholka poza zakresem!" << std::endl;
@@ -45,28 +45,34 @@ public:
         }
 
         // W przypadku grafu skierowanego: przypisujemy wagę krawędzi (u, v)
-        incidenceMatrix.get(u)->set(v, weight);
+        adjacencyMatrix.get(u)->set(v, weight);
 
         if (!directed) {
             // Dla grafu nieskierowanego przypisujemy wagę krawędzi w obie strony
-            incidenceMatrix.get(v)->set(u, weight);
+            adjacencyMatrix.get(v)->set(u, weight);
         }
     }
 
     // Metoda do pobrania macierzy incydencji
-    DynamicArray<int>* getIncidenceMatrix(int vertex) const {
+    DynamicArray<int>* getAdjacencyMatrix(int vertex) const {
         if (vertex < 0 || vertex >= numVertices) {
             std::cerr << "Blad: Indeks wierzcholka poza zakresem!" << std::endl;
             return nullptr;
         }
-        return incidenceMatrix.get(vertex);
+        return adjacencyMatrix.get(vertex);
     }
 
     // Metoda wyświetlająca macierz incydencji
-    void printIncidenceMatrix() {
+    void printAdjacencyMatrix() {
+        std::cout << "Macierz sasiedztwa:\n   ";
+        for (int j = 0; j < numEdges; ++j) {
+            std::cout << "E" << j << " ";
+        }
+        std::cout << std::endl;
         for (int i = 0; i < numVertices; ++i) {
+            std::cout << "V" << i << ": ";
             for (int j = 0; j < numEdges; ++j) {
-                std::cout << incidenceMatrix.get(i)->get(j) << " ";
+                std::cout << adjacencyMatrix.get(i)->get(j) << " ";
             }
             std::cout << std::endl;
         }
@@ -78,4 +84,4 @@ public:
     }
 };
 
-#endif // GRAPH_MATRIX_HPP
+#endif // GRAPH_ADJACENCY_MATRIX_HPP

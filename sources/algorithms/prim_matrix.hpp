@@ -2,7 +2,7 @@
 #define PRIM_MATRIX_HPP
 
 #include <limits>
-#include "../structures/graph_matrix.hpp"
+#include "../structures/graph_adjacency_matrix.hpp"
 #include "../structures/dynamic_array.hpp"
 #include "../structures/edge.hpp"
 
@@ -11,10 +11,10 @@ public:
     PrimMatrix() = default;
     ~PrimMatrix() = default;
 
-    GraphMatrix* run(GraphMatrix* graphMatrix) {
-        if (!graphMatrix) return nullptr;
+    GraphAdjacencyMatrix* run(GraphAdjacencyMatrix* graphAdjacencyMatrix) {
+        if (!graphAdjacencyMatrix) return nullptr;
 
-        int n = graphMatrix->getNumVertices();
+        int n = graphAdjacencyMatrix->getNumVertices();
         if (n == 0) return nullptr;
 
         // Tablice pomocnicze
@@ -48,7 +48,7 @@ public:
 
             inMST[u] = true;
 
-            DynamicArray<int>* row = graphMatrix->getIncidenceMatrix(u);
+            DynamicArray<int>* row = graphAdjacencyMatrix->getAdjacencyMatrix(u);
             for (int v = 0; v < n; ++v) {
                 int weight = row->get(v);
                 if (weight > 0 && !inMST[v] && weight < key[v]) {
@@ -58,7 +58,7 @@ public:
             }
         }
 
-        GraphMatrix* mst = new GraphMatrix(n, n, false);
+        GraphAdjacencyMatrix* mst = new GraphAdjacencyMatrix(n, n, false);
         for (int v = 0; v < n; ++v) {
             if (parent[v] != -1) {
                 std::cout<< "Adding edge: " << parent[v] << " - " << v << " with weight: " << key[v] << std::endl;

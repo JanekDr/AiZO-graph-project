@@ -1,7 +1,7 @@
 #include <iostream>
 #include "file_handler.hpp"
 #include "structures/graph.hpp"
-#include "structures/graph_matrix.hpp"
+#include "structures/graph_adjacency_matrix.hpp"
 #include "structures/dynamic_array.hpp"
 #include "structures/graph_incidence_matrix.hpp"
 #include "Timer.h"
@@ -36,14 +36,14 @@ int main(){
     Graph* generatedGraph = fileHandler3.getGraphListFromFile();
 
     FileHandler fileHandler4("../data/generated_graph_test.txt");
-    GraphMatrix* generatedGraphMatrix = fileHandler4.getGraphMatrixFromFile();
+    GraphAdjacencyMatrix* generatedGraphAdjacencyMatrix = fileHandler4.getGraphMatrixFromFile();
 
     FileHandler fileHandler5("../data/generated_graph_test.txt");
     GraphIncidenceMatrix* generatedGraphIncidenceMatrix = fileHandler5.getGraphIncidenceMatrixFromFile();
 
     generatedGraph->printAdjacencyList();
     cout<<"##########################"<<endl;
-    generatedGraphMatrix->printIncidenceMatrix();
+    generatedGraphAdjacencyMatrix->printAdjacencyMatrix();
     cout<<"##########################"<<endl;
     generatedGraphIncidenceMatrix->printIncidenceMatrix();
     return 0;

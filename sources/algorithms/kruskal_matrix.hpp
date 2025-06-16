@@ -2,7 +2,7 @@
 #define KRUSKAL_MATRIX_HPP
 
 #include <iostream>
-#include "../structures/graph_matrix.hpp"
+#include "../structures/graph_adjacency_matrix.hpp"
 #include "../structures/edge.hpp"
 #include "../structures/dynamic_array.hpp"
 
@@ -11,17 +11,17 @@ public:
     KruskalMatrix() = default;
     ~KruskalMatrix() = default;
 
-    GraphMatrix* run(GraphMatrix* graphMatrix) {
-        if (!graphMatrix) return nullptr;
+    GraphAdjacencyMatrix* run(GraphAdjacencyMatrix* graphAdjacencyMatrix) {
+        if (!graphAdjacencyMatrix) return nullptr;
 
         int 
-      n = graphMatrix->getNumVertices();
+      n = graphAdjacencyMatrix->getNumVertices();
         if (n == 0) return nullptr;
 
         // Zbieramy wszystkie krawedzie z macierzy incydencji
         DynamicArray<Edge>* edges = new DynamicArray<Edge>(n * (n - 1) / 2);
         for (int u = 0; u < n; ++u) {
-            DynamicArray<int>* row = graphMatrix->getIncidenceMatrix(u);
+            DynamicArray<int>* row = graphAdjacencyMatrix->getAdjacencyMatrix(u);
             for (int v = u + 1; v < n; ++v) {
                 int weight = row->get(v);
                 if (weight > 0) {
@@ -48,7 +48,7 @@ public:
         }
 
         // Tworzymy wynikowy graf
-        GraphMatrix* mst = new GraphMatrix(n, edges->getSize(), false);
+        GraphAdjacencyMatrix* mst = new GraphAdjacencyMatrix(n, edges->getSize(), false);
         for (size_t i = 0; i < edges->getSize(); ++i) {
             int u = edges->get(i).from;
             int v = edges->get(i).to;

@@ -5,7 +5,7 @@
 #include <fstream>
 #include <string>
 #include "structures/graph.hpp"
-#include "structures/graph_matrix.hpp"
+#include "structures/graph_adjacency_matrix.hpp"
 #include "structures/graph_incidence_matrix.hpp"
 
 using namespace std;
@@ -51,7 +51,7 @@ public:
         return graph;
     }
 
-    GraphMatrix* getGraphMatrixFromFile(bool directed = false) {
+    GraphAdjacencyMatrix* getGraphMatrixFromFile(bool directed = false) {
         if (!inputFile) {
             cerr << "Błąd: Plik wejściowy nie jest otwarty!" << endl;
             return nullptr;
@@ -60,14 +60,14 @@ public:
         int numEdges, numVertices;
         inputFile >> numEdges >> numVertices;
 
-        GraphMatrix* graphMatrix = new GraphMatrix(numVertices, numEdges, directed);
+        GraphAdjacencyMatrix* graphAdjacencyMatrix = new GraphAdjacencyMatrix(numVertices, numEdges, directed);
 
         int u, v, weight;
         while (inputFile >> u >> v >> weight){
-            graphMatrix->addEdge(u, v, weight, directed);
+            graphAdjacencyMatrix->addEdge(u, v, weight, directed);
         }
 
-        return graphMatrix;
+        return graphAdjacencyMatrix;
     }
 
     // NOWA METODA: Tworzenie macierzy incydencji
