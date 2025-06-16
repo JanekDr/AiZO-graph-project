@@ -1,15 +1,16 @@
 #include <iostream>
 #include "file_handler.hpp"
+#include "Timer.h"
 #include "structures/graph.hpp"
 #include "structures/graph_adjacency_matrix.hpp"
 #include "structures/dynamic_array.hpp"
 #include "structures/graph_incidence_matrix.hpp"
-#include "Timer.h"
 #include "algorithms/prim.hpp"
 #include "algorithms/prim_matrix.hpp"
 #include "algorithms/prim_incidence_matrix.hpp"
 #include "algorithms/kruskal.hpp"
 #include "algorithms/kruskal_matrix.hpp"
+#include "algorithms/kruskal_incidence_matrix.hpp"
 #include "graph_generator.hpp"
 
 using namespace std;
@@ -35,7 +36,7 @@ int main(){
     Prim primAlgorithm;
     Graph* mstList = primAlgorithm.run(generatedGraph);
     mstList->printAdjacencyList();
-    
+
     cout<<"##########################"<<endl;
     PrimMatrix primMatrixAlgorithm;
     GraphAdjacencyMatrix* mstMatrix = primMatrixAlgorithm.run(generatedGraphAdjacencyMatrix);
