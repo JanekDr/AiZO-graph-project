@@ -6,6 +6,7 @@
 #include <string>
 #include "structures/graph.hpp"
 #include "structures/graph_matrix.hpp"
+#include "structures/graph_incidence_matrix.hpp"
 
 using namespace std;
 
@@ -67,6 +68,36 @@ public:
         }
 
         return graphMatrix;
+    }
+
+    // NOWA METODA: Tworzenie macierzy incydencji
+    GraphIncidenceMatrix* getGraphIncidenceMatrixFromFile(bool directed = false) {
+        if (!inputFile) {
+            cerr << "Błąd: Plik wejściowy nie jest otwarty!" << endl;
+            return nullptr;
+        }
+
+        // Resetujemy pozycję pliku na początek, jeśli plik był już czytany
+        inputFile.clear();
+        inputFile.seekg(0, ios::beg);
+
+        int numEdges, numVertices;
+        inputFile >> numEdges >> numVertices;
+
+        GraphIncidenceMatrix* incidenceMatrix = new GraphIncidenceMatrix(numVertices, numEdges, directed);
+
+        int u, v, weight;
+        for (int i = 0; i < numEdges; ++i) {
+            inputFile >> u >> v >> weight;
+            if (inputFile.fail()) {
+                cerr << "Błąd: Niepoprawny format danych krawędzi!" << endl;
+                delete incidenceMatrix;
+                return nullptr;
+            }
+            incidenceMatrix->addEdge(u, v, weight);
+        }
+
+        return incidenceMatrix;
     }
 };
 

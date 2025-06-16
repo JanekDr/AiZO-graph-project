@@ -1,0 +1,87 @@
+#ifndef GRAPH_INCIDENCE_MATRIX_HPP
+#define GRAPH_INCIDENCE_MATRIX_HPP
+
+#include <iostream>
+#include "dynamic_array.hpp"
+#include "edge.hpp"
+
+
+class GraphIncidenceMatrix {
+private:
+    int numVertices;
+    int maxEdges;
+    int currentEdgeIndex;
+    DynamicArray<DynamicArray<int>*> incidenceMatrix;
+    DynamicArray<Edge> edges;
+    bool directed;
+
+public:
+    GraphIncidenceMatrix(int vertices, int maxEdges, bool directed = false)
+        : numVertices(vertices), maxEdges(maxEdges), currentEdgeIndex(0), 
+          directed(directed), incidenceMatrix(vertices, nullptr), edges(maxEdges) {
+        
+        for (int i = 0; i < vertices; ++i) {
+            DynamicArray<int>* row = new DynamicArray<int>(maxEdges, 0);
+            for (int j = 0; j < maxEdges; ++j)
+                row->add(0);
+            incidenceMatrix.add(row);
+        }
+    }
+
+    ~GraphIncidenceMatrix() {
+        for (int i = 0; i < numVertices; ++i) {
+            delete incidenceMatrix.get(i);
+        }
+    }
+
+    void addEdge(int u, int v, int weight) {
+        if (currentEdgeIndex >= maxEdges) {
+            std::cerr << "Przekroczono maksymalną liczbę krawędzi!" << std::endl;
+            return;
+        }
+
+        edges.add(Edge(u, v, weight));
+        
+        if (directed) {
+            // Graf skierowany: +1 dla wierzchołka wychodzącego, -1 dla wchodzącego
+            incidenceMatrix.get(u)->set(currentEdgeIndex, 1);
+            incidenceMatrix.get(v)->set(currentEdgeIndex, -1);
+        } else {
+            // Graf nieskierowany: 1 dla obu wierzchołków
+            incidenceMatrix.get(u)->set(currentEdgeIndex, 1);
+            incidenceMatrix.get(v)->set(currentEdgeIndex, 1);
+        }
+        
+        currentEdgeIndex++;
+    }
+
+    void printIncidenceMatrix() {
+        std::cout << "Macierz incydencji:\n   ";
+        for (int j = 0; j < currentEdgeIndex; ++j) {
+            std::cout << "E" << j << " ";
+        }
+        std::cout << std::endl;
+
+        for (int i = 0; i < numVertices; ++i) {
+            std::cout << "V" << i << ": ";
+            for (int j = 0; j < currentEdgeIndex; ++j) {
+                std::cout << incidenceMatrix.get(i)->get(j) << "  ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    void printEdges() {
+        std::cout << "Lista krawędzi:" << std::endl;
+        for (int i = 0; i < currentEdgeIndex; ++i) {
+            Edge e = edges.get(i);
+            std::cout << "E" << i << ": " << e.from << " -> " << e.to 
+                      << " (waga: " << e.weight << ")" << std::endl;
+        }
+    }
+
+    int getNumVertices() const { return numVertices; }
+    int getNumEdges() const { return currentEdgeIndex; }
+};
+
+#endif // GRAPH_INCIDENCE_MATRIX_HPP
