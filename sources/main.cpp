@@ -14,37 +14,21 @@
 using namespace std;
 
 int main(){
-    // FileHandler fileHandler("../data/prim_data.txt");
-    // FileHandler fileHandler2("../data/prim_data.txt");
-    // Graph* graph = fileHandler.getGraphListFromFile();
-    // GraphMatrix* graphMatrix = fileHandler2.getGraphMatrixFromFile();
-    // Prim prim;
-    // PrimMatrix primMatrix;
-    // Graph* prim_list = prim.run(graph);
-    // GraphMatrix* prim_matrix = primMatrix.run(graphMatrix);
-
-
-    // prim_list->printIncidenceMatrix();
-    // cout<<"##########################"<<endl;
-    // cout<<"##########################"<<endl;
-    // prim_matrix->printIncidenceMatrix();
-
-
-    // GraphGenerator graphGenerator(5,0.8);
-    // graphGenerator.generateToFile("../data/generated_graph_test.txt");
     FileHandler fileHandler3("../data/generated_graph_test.txt");
-    Graph* generatedGraph = fileHandler3.getGraphListFromFile();
+    Graph* generatedGraph = fileHandler3.getGraphListFromFile(true);
 
     FileHandler fileHandler4("../data/generated_graph_test.txt");
-    GraphAdjacencyMatrix* generatedGraphAdjacencyMatrix = fileHandler4.getGraphMatrixFromFile();
+    GraphAdjacencyMatrix* generatedGraphAdjacencyMatrix = fileHandler4.getGraphMatrixFromFile(true);
 
     FileHandler fileHandler5("../data/generated_graph_test.txt");
-    GraphIncidenceMatrix* generatedGraphIncidenceMatrix = fileHandler5.getGraphIncidenceMatrixFromFile();
+    GraphIncidenceMatrix* generatedGraphIncidenceMatrix = fileHandler5.getGraphIncidenceMatrixFromFile(true);
 
     generatedGraph->printAdjacencyList();
     cout<<"##########################"<<endl;
     generatedGraphAdjacencyMatrix->printAdjacencyMatrix();
     cout<<"##########################"<<endl;
     generatedGraphIncidenceMatrix->printIncidenceMatrix();
+
+
     return 0;
 }

@@ -5,7 +5,6 @@
 #include "dynamic_array.hpp"
 #include "edge.hpp"
 
-
 class GraphIncidenceMatrix {
 private:
     int numVertices;
@@ -43,29 +42,34 @@ public:
         edges.add(Edge(u, v, weight));
         
         if (directed) {
-            // Graf skierowany: +1 dla wierzchołka wychodzącego, -1 dla wchodzącego
-            incidenceMatrix.get(u)->set(currentEdgeIndex, 1);
-            incidenceMatrix.get(v)->set(currentEdgeIndex, -1);
+            // Graf skierowany: -waga dla wierzchołka wychodzącego, +waga dla wchodzącego
+            incidenceMatrix.get(u)->set(currentEdgeIndex, -weight);
+            incidenceMatrix.get(v)->set(currentEdgeIndex, weight);
         } else {
-            // Graf nieskierowany: 1 dla obu wierzchołków
-            incidenceMatrix.get(u)->set(currentEdgeIndex, 1);
-            incidenceMatrix.get(v)->set(currentEdgeIndex, 1);
+            // Graf nieskierowany: waga dla obu wierzchołków
+            incidenceMatrix.get(u)->set(currentEdgeIndex, weight);
+            incidenceMatrix.get(v)->set(currentEdgeIndex, weight);
         }
         
         currentEdgeIndex++;
     }
 
     void printIncidenceMatrix() {
-        std::cout << "Macierz incydencji:\n   ";
+        std::cout << "Macierz incydencji (z wagami):\n     ";
         for (int j = 0; j < currentEdgeIndex; ++j) {
-            std::cout << "E" << j << " ";
+            std::cout << "E" << j << "   ";
         }
         std::cout << std::endl;
 
         for (int i = 0; i < numVertices; ++i) {
             std::cout << "V" << i << ": ";
             for (int j = 0; j < currentEdgeIndex; ++j) {
-                std::cout << incidenceMatrix.get(i)->get(j) << "  ";
+                int value = incidenceMatrix.get(i)->get(j);
+                if (value >= 0) {
+                    std::cout << " " << value << "   ";
+                } else {
+                    std::cout << value << "   ";
+                }
             }
             std::cout << std::endl;
         }
@@ -80,8 +84,30 @@ public:
         }
     }
 
+    // void printDetailedMatrix() {
+    //     std::cout << "\nSzczegółowa macierz incydencji:" << std::endl;
+    //     std::cout << "Legenda: ";
+    //     if (directed) {
+    //         std::cout << "wartość ujemna = wierzchołek źródłowy, wartość dodatnia = wierzchołek docelowy" << std::endl;
+    //     } else {
+    //         std::cout << "wartość dodatnia = wierzchołek incydentny z krawędzią" << std::endl;
+    //     }
+        
+    //     printIncidenceMatrix();
+    //     std::cout << std::endl;
+    //     printEdges();
+    // }
+
     int getNumVertices() const { return numVertices; }
     int getNumEdges() const { return currentEdgeIndex; }
+    
+    // Metoda pomocnicza do sprawdzenia wartości w macierzy
+    int getIncidenceValue(int vertex, int edge) const {
+        if (vertex >= 0 && vertex < numVertices && edge >= 0 && edge < currentEdgeIndex) {
+            return incidenceMatrix.get(vertex)->get(edge);
+        }
+        return 0;
+    }
 };
 
 #endif // GRAPH_INCIDENCE_MATRIX_HPP
