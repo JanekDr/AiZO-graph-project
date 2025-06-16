@@ -61,7 +61,6 @@ public:
         GraphAdjacencyMatrix* mst = new GraphAdjacencyMatrix(n, n, false);
         for (int v = 0; v < n; ++v) {
             if (parent[v] != -1) {
-                std::cout<< "Adding edge: " << parent[v] << " - " << v << " with weight: " << key[v] << std::endl;
                 mst->addEdge(parent[v], v, key[v]);
             }
         }

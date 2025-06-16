@@ -6,22 +6,24 @@
 #include "structures/graph_incidence_matrix.hpp"
 #include "Timer.h"
 #include "algorithms/prim.hpp"
+#include "algorithms/prim_matrix.hpp"
+#include "algorithms/prim_incidence_matrix.hpp"
 #include "algorithms/kruskal.hpp"
 #include "algorithms/kruskal_matrix.hpp"
-#include "algorithms/prim_matrix.hpp"
 #include "graph_generator.hpp"
 
 using namespace std;
 
 int main(){
-    FileHandler fileHandler3("../data/generated_graph_test.txt");
-    Graph* generatedGraph = fileHandler3.getGraphListFromFile(true);
+    string inputFilename = "../data/prim_data.txt";
+    FileHandler fileHandler3(inputFilename);
+    Graph* generatedGraph = fileHandler3.getGraphListFromFile();
 
-    FileHandler fileHandler4("../data/generated_graph_test.txt");
-    GraphAdjacencyMatrix* generatedGraphAdjacencyMatrix = fileHandler4.getGraphMatrixFromFile(true);
+    FileHandler fileHandler4(inputFilename);
+    GraphAdjacencyMatrix* generatedGraphAdjacencyMatrix = fileHandler4.getGraphMatrixFromFile();
 
-    FileHandler fileHandler5("../data/generated_graph_test.txt");
-    GraphIncidenceMatrix* generatedGraphIncidenceMatrix = fileHandler5.getGraphIncidenceMatrixFromFile(true);
+    FileHandler fileHandler5(inputFilename);
+    GraphIncidenceMatrix* generatedGraphIncidenceMatrix = fileHandler5.getGraphIncidenceMatrixFromFile();
 
     generatedGraph->printAdjacencyList();
     cout<<"##########################"<<endl;
@@ -29,6 +31,20 @@ int main(){
     cout<<"##########################"<<endl;
     generatedGraphIncidenceMatrix->printIncidenceMatrix();
 
+    cout<<"##########################"<<endl;
+    Prim primAlgorithm;
+    Graph* mstList = primAlgorithm.run(generatedGraph);
+    mstList->printAdjacencyList();
+    
+    cout<<"##########################"<<endl;
+    PrimMatrix primMatrixAlgorithm;
+    GraphAdjacencyMatrix* mstMatrix = primMatrixAlgorithm.run(generatedGraphAdjacencyMatrix);
+    mstMatrix->printAdjacencyMatrix();
+
+    cout<<"##########################"<<endl;
+    PrimIncidenceMatrix primIncidenceAlgorithm;
+    GraphIncidenceMatrix* mstIncidenceMatrix = primIncidenceAlgorithm.run(generatedGraphIncidenceMatrix);
+    mstIncidenceMatrix->printIncidenceMatrix();
 
     return 0;
 }

@@ -55,7 +55,7 @@ public:
     }
 
     void printIncidenceMatrix() {
-        std::cout << "Macierz incydencji (z wagami):\n     ";
+        std::cout << "Macierz incydencji:\n     ";
         for (int j = 0; j < currentEdgeIndex; ++j) {
             std::cout << "E" << j << "   ";
         }
@@ -100,6 +100,7 @@ public:
 
     int getNumVertices() const { return numVertices; }
     int getNumEdges() const { return currentEdgeIndex; }
+    int isDirected() const { return directed; }
     
     // Metoda pomocnicza do sprawdzenia wartości w macierzy
     int getIncidenceValue(int vertex, int edge) const {

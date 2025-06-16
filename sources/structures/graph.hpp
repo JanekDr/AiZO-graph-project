@@ -42,8 +42,9 @@ public:
     }
 
     void printAdjacencyList() {
+        std::cout<<"Lista sasiedztwa:\n";
         for (int i = 0; i < numVertices; ++i) {
-            std::cout << "Wierzcholek " << i << ": ";
+            std::cout << "V" << i << ": ";
             DynamicArray<Edge>* list = adjacencyList.get(i);
             for (int j = 0; j < list->getSize(); ++j) {
                 Edge e = list->get(j);
