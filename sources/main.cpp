@@ -16,36 +16,18 @@
 using namespace std;
 
 int main(){
-    string inputFilename = "../data/prim_data.txt";
-    FileHandler fileHandler3(inputFilename);
-    Graph* generatedGraph = fileHandler3.getGraphListFromFile();
-
-    FileHandler fileHandler4(inputFilename);
-    GraphAdjacencyMatrix* generatedGraphAdjacencyMatrix = fileHandler4.getGraphMatrixFromFile();
-
-    FileHandler fileHandler5(inputFilename);
-    GraphIncidenceMatrix* generatedGraphIncidenceMatrix = fileHandler5.getGraphIncidenceMatrixFromFile();
-
-    generatedGraph->printAdjacencyList();
-    cout<<"##########################"<<endl;
-    generatedGraphAdjacencyMatrix->printAdjacencyMatrix();
-    cout<<"##########################"<<endl;
-    generatedGraphIncidenceMatrix->printIncidenceMatrix();
-
-    cout<<"##########################"<<endl;
-    Prim primAlgorithm;
-    Graph* mstList = primAlgorithm.run(generatedGraph);
-    mstList->printAdjacencyList();
-
-    cout<<"##########################"<<endl;
-    PrimMatrix primMatrixAlgorithm;
-    GraphAdjacencyMatrix* mstMatrix = primMatrixAlgorithm.run(generatedGraphAdjacencyMatrix);
-    mstMatrix->printAdjacencyMatrix();
-
-    cout<<"##########################"<<endl;
-    PrimIncidenceMatrix primIncidenceAlgorithm;
-    GraphIncidenceMatrix* mstIncidenceMatrix = primIncidenceAlgorithm.run(generatedGraphIncidenceMatrix);
-    mstIncidenceMatrix->printIncidenceMatrix();
+    
+    GraphGenerator gen;
+    Graph* g = gen.generateGraph(500, 0.99);
+    gen.saveGraphToFile(g, "../data/generate_graph.txt");
+    FileHandler fileHandler("../data/generate_graph.txt");
+    GraphIncidenceMatrix* incidenceMatrix = fileHandler.getGraphIncidenceMatrixFromFile(false);
+    Timer timer1;
+    PrimIncidenceMatrix mstMatrix;
+    timer1.start();
+    mstMatrix.run(incidenceMatrix);
+    timer1.stop();
+    cout<<"Prim Incidence Matrix Time: " << timer1.result() << " ms" << endl;
 
     return 0;
 }

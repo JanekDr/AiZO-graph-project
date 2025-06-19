@@ -12,11 +12,17 @@ private:
     DynamicArray<DynamicArray<Edge>*> adjacencyList;
     bool directed;
 public:
-    Graph(int vertices) : numVertices(vertices), adjacencyList(vertices) {
-        for (int i = 0; i < vertices; ++i) {
-            adjacencyList.add(new DynamicArray<Edge>(vertices));
-        }
+    // W graph.hpp
+Graph(int vertices) : numVertices(vertices), adjacencyList(vertices) {
+    // POPRAWKA: Użyj większej pojemności dla wyższych gęstości
+    int capacityPerVertex = vertices; // Każdy wierzchołek może mieć maksymalnie n-1 krawędzi
+    
+    for (int i = 0; i < vertices; ++i) {
+        adjacencyList.add(new DynamicArray<Edge>(capacityPerVertex));
     }
+}
+
+
 
     ~Graph() {
         for (size_t i = 0; i < adjacencyList.getSize(); ++i) {

@@ -16,9 +16,9 @@ private:
 public:
     DynamicArray(size_t initialCapacity=5, T initialValue = T()) : size(0), capacity(initialCapacity) {
         data = new T[capacity];
-        for (size_t i = 0; i < capacity; ++i) {
-            data[i] = initialValue;  // Inicjalizujemy wszystkie komórki tablicy
-        }
+        // for (size_t i = 0; i < capacity; ++i) {
+        //     data[i] = initialValue;  // Inicjalizujemy wszystkie komórki tablicy
+        // }
     }
 
     ~DynamicArray() {
@@ -26,13 +26,21 @@ public:
     }
 
     void resize(size_t newCapacity) {
-        if (newCapacity == capacity) return;
+        if (newCapacity <= capacity) return;
+        
+        T* newData = new T[newCapacity];
+        
+        // Kopiuj istniejące dane
+        for (size_t i = 0; i < size; ++i) {
+            newData[i] = data[i];
+        }
         
         delete[] data;
-        data = new T[newCapacity];
+        data = newData;
         capacity = newCapacity;
-        size = 0;
-    }    
+        // WAŻNE: NIE resetuj size = 0 !!!
+    }
+    
 
     void add(T value) {
         if (size >= capacity){
