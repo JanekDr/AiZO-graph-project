@@ -14,7 +14,7 @@ public:
     }
 
     // Zwraca graf reprezentujący najkrótsze ścieżki z wierzchołka start
-    Graph* run(Graph* graph, int start) {
+    Graph* run(Graph* graph, int start=0) {
         if (!graph) return nullptr;
 
         int n = graph->getNumVertices();
@@ -55,8 +55,12 @@ public:
 
         shortestPaths = new Graph(n);
         for (int v = 0; v < n; ++v) {
-            if (prev[v] != -1) {
-                shortestPaths->addEdge(prev[v], v, dist[v] - dist[prev[v]]);
+            if (prev[v] != -1 && dist[v] != std::numeric_limits<int>::max()) {
+                int u = prev[v];
+                if (u >= 0 && u < n) {
+                    int weight = dist[v] - dist[u];
+                    shortestPaths->addEdge(u, v, weight);
+                }
             }
         }
 
@@ -67,11 +71,13 @@ public:
         return shortestPaths;
     }
 
+
     // Zwraca koszt najkrótszej ścieżki do danego wierzchołka
     int getShortestDistance(int start, int end) const {
         if (!shortestPaths) return -1;
         int n = shortestPaths->getNumVertices();
         if (start < 0 || end < 0 || start >= n || end >= n) return -1;
+        // if (end==-1) end = shortestPaths->getNumVertices()-1;
 
         // BFS lub DFS w wynikowym grafie (najkrótsze ścieżki mają tylko po jednej krawędzi)
         int* dist = new int[n];

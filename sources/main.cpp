@@ -165,7 +165,7 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
                 resultList = dijkstra.run(graph, start);
                 shortestPathCost = dijkstra.getShortestDistance(start, end);
                 timer.stop();
-
+                resultList->printAdjacencyList();
             } else if (dataStructure == 1) {
                 graphIncidence = fileHandler.getGraphIncidenceMatrixFromFile(true);
                 graphIncidence->printIncidenceMatrix();
@@ -246,6 +246,7 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
                 graph->printAdjacencyList(out);
                 out << "Shortest path from " << start << " to " << end << ":\n";
                 resultList->printAdjacencyList(out);
+                resultList->printAdjacencyList(); //tu nie dziala
                 out << "Shortest path cost from " << start << " to " << end << ": " << shortestPathCost << endl;
                 out << "Time: " << timer.result() << " ms\n";
             } else if (resultIncidence != nullptr) {
@@ -263,13 +264,13 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
     } else {
         cerr << "Error: Cannot open output file " << outputFile << endl;
     }
+    out.close(); 
     delete graph;
     delete graphMatrix;
     delete graphIncidence;
     delete resultList;
     delete resultMatrix;
     delete resultIncidence;
-    out.close();
 }
 
 void processTestMode(int problem, int algorithm, int dataStructure, int size, double density, const string& outputFile, int start = 0, int end = -1) {
@@ -324,7 +325,7 @@ int main(int argc, char* argv[]) {
         } else {
             if (!parseToInt(argv[6], start)) outputFile = argv[6];    
         }    
-       
+        if (end!=-1)end--;
         processFileMode(problem, algorithm, dataStructure,inputFile, outputFile, start, end);
 
     } else if (mode == "--test") {
