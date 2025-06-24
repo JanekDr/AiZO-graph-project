@@ -47,7 +47,7 @@ Graph(int vertices) : numVertices(vertices), adjacencyList(vertices) {
         return adjacencyList.get(vertex);
     }
 
-    void printAdjacencyList() {
+    void printAdjacencyList(std::ostream& out = std::cout) {
         std::cout<<"Lista sasiedztwa:\n";
         for (int i = 0; i < numVertices; ++i) {
             std::cout << "V" << i << ": ";

@@ -16,6 +16,10 @@ public:
 
     Graph* generateGraph(int numVertices, double density) {
         if (numVertices < 2) return nullptr;
+        if (density < 0.0 || density > 1.0) {
+            std::cerr << "Blad: Gestosc musi byc w zakresie [0.0, 1.0]!" << std::endl;
+            return nullptr;
+        }
 
         int maxEdges = numVertices * (numVertices - 1) / 2;
         int minEdges = numVertices - 1;
