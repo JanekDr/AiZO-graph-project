@@ -80,13 +80,13 @@ public:
 
     void printAdjacencyMatrix(std::ostream& out = std::cout) const{
         out << "Macierz sasiedztwa:\n     ";
-        for (int j = 0; j < numEdges; ++j) {
+        for (int j = 0; j < numVertices; ++j) {
             out << "V" << j << "   ";
         }
         out << std::endl;
         for (int i = 0; i < numVertices; ++i) {
             out << "V" << i << ":  ";
-            for (int j = 0; j < numEdges; ++j) {
+            for (int j = 0; j < numVertices; ++j) {
                 out << adjacencyMatrix.get(i)->get(j) << "    ";
             }
             out << std::endl;
