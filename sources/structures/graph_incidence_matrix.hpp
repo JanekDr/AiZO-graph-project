@@ -74,6 +74,27 @@ public:
             std::cout << std::endl;
         }
     }
+    
+    void printIncidenceMatrix(std::ostream& out = std::cout) const{
+        out << "Macierz incydencji:\n     ";
+        for (int j = 0; j < currentEdgeIndex; ++j) {
+            out << "E" << j << "   ";
+        }
+        out << std::endl;
+
+        for (int i = 0; i < numVertices; ++i) {
+            out << "V" << i << ": ";
+            for (int j = 0; j < currentEdgeIndex; ++j) {
+                int value = incidenceMatrix.get(i)->get(j);
+                if (value >= 0) {
+                    out << " " << value << "   ";
+                } else {
+                    out << value << "   ";
+                }
+            }
+            out << std::endl;
+        }
+    }
 
     void printEdges() {
         std::cout << "Lista krawędzi:" << std::endl;

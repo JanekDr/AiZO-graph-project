@@ -220,40 +220,40 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
            if (resultList != nullptr){
                 out << "MST using adjacency list:\n";
                 out << "Original graph:\n";
-                out << graphIncidence << endl;
+                graph->printAdjacencyList(out);
                 out << "MST:" <<endl;
-                out << resultList << endl;
+                resultList->printAdjacencyList(out);
                 out << "Time: " << timer.result() << " ms\n";
             } else if (resultIncidence != nullptr) {
                 out << "MST using incidence matrix:\n";
                 out << "Original graph:\n";
-                out << graphIncidence << endl;
+                graphIncidence->printIncidenceMatrix(out);
                 out << "MST:" <<endl;
-                out << resultIncidence << endl;
+                resultIncidence->printIncidenceMatrix(out);
                 out << "Time: " << timer.result() << " ms\n";
             } else {
                 out << "MST using adjacency matrix:\n";
                 out << "Original graph:\n";
-                out << graphMatrix << endl;
+                graphMatrix->printAdjacencyMatrix(out);
                 out << "MST:" <<endl;
-                out << resultMatrix << endl;
+                resultMatrix->printAdjacencyMatrix(out);
                 out << "Time: " << timer.result() << " ms\n";
             } 
         } else {
             if (resultList != nullptr) {
                 out << "Shortest path using adjacency list:\n";
                 out << "Original graph:\n";
-                out << graph << endl;
+                graph->printAdjacencyList(out);
                 out << "Shortest path from " << start << " to " << end << ":\n";
-                out << resultList << endl;
+                resultList->printAdjacencyList(out);
                 out << "Shortest path cost from " << start << " to " << end << ": " << shortestPathCost << endl;
                 out << "Time: " << timer.result() << " ms\n";
             } else if (resultIncidence != nullptr) {
                 out << "Shortest path using incidence matrix:\n";
                 out << "Original graph:\n";
-                out << graphIncidence << endl;
+                graphIncidence->printIncidenceMatrix(out);
                 out << "Shortest path from " << start << " to " << end << ":\n";
-                out << resultIncidence << endl;
+                resultIncidence->printIncidenceMatrix(out);
                 out << "Shortest path cost from " << start << " to " << end << ": " << shortestPathCost << endl;
                 out << "Time: " << timer.result() << " ms\n";
             } else {

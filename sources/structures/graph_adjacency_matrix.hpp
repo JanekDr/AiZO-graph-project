@@ -63,7 +63,7 @@ public:
     }
 
     // Metoda wyświetlająca macierz incydencji
-    void printAdjacencyMatrix() {
+    void printAdjacencyMatrix(){
         std::cout << "Macierz sasiedztwa:\n     ";
         for (int j = 0; j < numEdges; ++j) {
             std::cout << "V" << j << "   ";
@@ -75,6 +75,21 @@ public:
                 std::cout << adjacencyMatrix.get(i)->get(j) << "    ";
             }
             std::cout << std::endl;
+        }
+    }
+
+    void printAdjacencyMatrix(std::ostream& out = std::cout) const{
+        out << "Macierz sasiedztwa:\n     ";
+        for (int j = 0; j < numEdges; ++j) {
+            out << "V" << j << "   ";
+        }
+        out << std::endl;
+        for (int i = 0; i < numVertices; ++i) {
+            out << "V" << i << ":  ";
+            for (int j = 0; j < numEdges; ++j) {
+                out << adjacencyMatrix.get(i)->get(j) << "    ";
+            }
+            out << std::endl;
         }
     }
 

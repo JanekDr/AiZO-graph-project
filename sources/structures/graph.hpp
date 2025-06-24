@@ -47,7 +47,7 @@ Graph(int vertices) : numVertices(vertices), adjacencyList(vertices) {
         return adjacencyList.get(vertex);
     }
 
-    void printAdjacencyList(std::ostream& out = std::cout) {
+    void printAdjacencyList() {
         std::cout<<"Lista sasiedztwa:\n";
         for (int i = 0; i < numVertices; ++i) {
             std::cout << "V" << i << ": ";
@@ -57,6 +57,19 @@ Graph(int vertices) : numVertices(vertices), adjacencyList(vertices) {
                 std::cout << "(" << e.to << ", " << e.weight << ") ";
             }
             std::cout << std::endl;
+        }
+    }
+
+    void printAdjacencyList(std::ostream& out = std::cout) const{
+        out<<"Lista sasiedztwa:\n";
+        for (int i = 0; i < numVertices; ++i) {
+            out << "V" << i << ": ";
+            DynamicArray<Edge>* list = adjacencyList.get(i);
+            for (int j = 0; j < list->getSize(); ++j) {
+                Edge e = list->get(j);
+                out << "(" << e.to << ", " << e.weight << ") ";
+            }
+            out << std::endl;
         }
     }
 
