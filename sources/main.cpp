@@ -57,7 +57,7 @@ void printHelp() {
          << "<data structure> Data structure (0 - adjacency list, 1 - incidence matrix, 2 - adjacency matrix (only available for MST problem))\n"
          << "<size>        Number of nodes\n"
          << "<density>     Density of edges (0.0 - 1.0)\n"
-         << "<outputFile>  File to store benchmark times\n\n"
+         << "<outputFile>  File where execution time will be saved.\n\n"
          << "[start]      Optional start vertex for shortest path algorithms (default: 0)\n"
          << "[end]        Optional end vertex for shortest path algorithms (default: -1, meaning last vertex)\n\n"
 
@@ -89,7 +89,6 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
         if (algorithm == 0){
             if (dataStructure == 0){
                 graph = fileHandler.getGraphListFromFile();
-                graph->printAdjacencyList();
 
                 timer.start();
                 Prim prim;
@@ -98,7 +97,6 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
 
             } else if (dataStructure == 1) {
                 graphIncidence = fileHandler.getGraphIncidenceMatrixFromFile();
-                graphIncidence->printIncidenceMatrix();
 
                 timer.start();
                 PrimIncidenceMatrix primMatrix;
@@ -107,7 +105,6 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
 
             } else if (dataStructure == 2) {
                 GraphAdjacencyMatrix* graphMatrix = fileHandler.getGraphMatrixFromFile();
-                graphMatrix->printAdjacencyMatrix();
 
                 timer.start();
                 PrimMatrix primMatrix;
@@ -121,7 +118,6 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
         } else if (algorithm == 1) {
             if (dataStructure == 0) {
                 graph = fileHandler.getGraphListFromFile();
-                graph->printAdjacencyList();
 
                 timer.start();
                 Kruskal kruskal;
@@ -130,7 +126,6 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
 
             } else if (dataStructure == 1) {
                 graphIncidence = fileHandler.getGraphIncidenceMatrixFromFile();
-                graphIncidence->printIncidenceMatrix();
 
                 timer.start();
                 KruskalIncidenceMatrix kruskalIncidence;
@@ -139,7 +134,6 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
 
             } else if (dataStructure == 2) {
                 graphMatrix = fileHandler.getGraphMatrixFromFile();
-                graphMatrix->printAdjacencyMatrix();
 
                 timer.start();
                 KruskalMatrix kruskalMatrix;
@@ -158,18 +152,14 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
         if (algorithm == 0) {
             if (dataStructure == 0) {
                 graph = fileHandler.getGraphListFromFile(true);
-                graph->printAdjacencyList();
 
                 timer.start();
                 Dijkstra dijkstra;
                 resultList = dijkstra.run(graph, start);
                 shortestPathCost = dijkstra.getShortestDistance(start, end);
-                
                 timer.stop();
-                resultList->printAdjacencyList();
             } else if (dataStructure == 1) {
                 graphIncidence = fileHandler.getGraphIncidenceMatrixFromFile(true);
-                graphIncidence->printIncidenceMatrix();
 
                 timer.start();
                 DijkstraIncidenceMatrix dijkstraIncidence;
@@ -184,7 +174,6 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
         } else if (algorithm == 1) {
             if (dataStructure == 0) {
                 graph = fileHandler.getGraphListFromFile(true);
-                graph->printAdjacencyList();
 
                 timer.start();
                 BellmanFord bellmanFord;
@@ -194,7 +183,6 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
 
             } else if (dataStructure == 1) {
                 graphIncidence = fileHandler.getGraphIncidenceMatrixFromFile(true);
-                graphIncidence->printIncidenceMatrix();
 
                 timer.start();
                 BellmanFordIncidenceMatrix bellmanFordIncidence;
@@ -247,7 +235,6 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
                 graph->printAdjacencyList(out);
                 out << "Shortest path from " << start << " to " << end << ":\n";
                 resultList->printAdjacencyList(out);
-                resultList->printAdjacencyList(); //tu nie dziala
                 out << "Shortest path cost from " << start << " to " << end << ": " << shortestPathCost << endl;
                 out << "Time: " << timer.result() << " ms\n";
             } else if (resultIncidence != nullptr) {
@@ -274,12 +261,148 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
     delete resultIncidence;
 }
 
-void processTestMode(int problem, int algorithm, int dataStructure, int size, double density, const string& outputFile, int start = 0, int end = -1) {
+void processTestMode(int problem, int algorithm, int dataStructure, int size, float density, const string& outputFile, int start = 0, int end = -1) {
     Timer timer;
-    ofstream out(outputFile);
-    if (!out.is_open()) {
-        cerr << "Error: Cannot open output file " << outputFile << endl;
+
+    GraphGenerator generator;
+    Graph* generatedGraph = generator.generateGraph(size, density);
+    generator.saveGraphToFile(generatedGraph, "../data/generated_graph.txt");
+
+    FileHandler fileHandler("../data/generated_graph.txt");
+    Graph* graph;
+    Graph* resultList = nullptr;
+
+    GraphAdjacencyMatrix* graphMatrix;
+    GraphAdjacencyMatrix* resultMatrix = nullptr;
+
+    GraphIncidenceMatrix* graphIncidence;
+    GraphIncidenceMatrix* resultIncidence = nullptr;
+
+    int shortestPathCost;
+
+    if (problem == 0){
+        if (algorithm == 0){
+            if (dataStructure == 0){
+                graph = fileHandler.getGraphListFromFile();
+
+                timer.start();
+                Prim prim;
+                resultList = prim.run(graph);
+                timer.stop();
+
+            } else if (dataStructure == 1) {
+                graphIncidence = fileHandler.getGraphIncidenceMatrixFromFile();
+
+                timer.start();
+                PrimIncidenceMatrix primMatrix;
+                resultIncidence = primMatrix.run(graphIncidence);
+                timer.stop();
+
+            } else if (dataStructure == 2) {
+                GraphAdjacencyMatrix* graphMatrix = fileHandler.getGraphMatrixFromFile();
+
+                timer.start();
+                PrimMatrix primMatrix;
+                GraphAdjacencyMatrix* resultMatrix = primMatrix.run(graphMatrix);
+                timer.stop();
+
+            } else {
+                cerr << "Error: Invalid data structure for MST problem.\n";
+                return;
+            }
+        } else if (algorithm == 1) {
+            if (dataStructure == 0) {
+                graph = fileHandler.getGraphListFromFile();
+
+                timer.start();
+                Kruskal kruskal;
+                resultList = kruskal.run(graph);
+                timer.stop();
+
+            } else if (dataStructure == 1) {
+                graphIncidence = fileHandler.getGraphIncidenceMatrixFromFile();
+
+                timer.start();
+                KruskalIncidenceMatrix kruskalIncidence;
+                resultIncidence = kruskalIncidence.run(graphIncidence);
+                timer.stop();
+
+            } else if (dataStructure == 2) {
+                graphMatrix = fileHandler.getGraphMatrixFromFile();
+
+                timer.start();
+                KruskalMatrix kruskalMatrix;
+                resultMatrix = kruskalMatrix.run(graphMatrix);
+                timer.stop();
+
+            } else {
+                cerr << "Error: Invalid data structure for MST problem.\n";
+                return;
+            }
+        } else {
+            cerr << "Error: Invalid algorithm for MST problem.\n";
+            return;
+        }
+    } else if (problem == 1){
+        if (algorithm == 0) {
+            if (dataStructure == 0) {
+                graph = fileHandler.getGraphListFromFile(true);
+
+                timer.start();
+                Dijkstra dijkstra;
+                resultList = dijkstra.run(graph, start);
+                shortestPathCost = dijkstra.getShortestDistance(start, end);
+                timer.stop();
+            } else if (dataStructure == 1) {
+                graphIncidence = fileHandler.getGraphIncidenceMatrixFromFile(true);
+
+                timer.start();
+                DijkstraIncidenceMatrix dijkstraIncidence;
+                resultIncidence = dijkstraIncidence.run(graphIncidence, start);
+                shortestPathCost = dijkstraIncidence.getShortestDistance(start, end);
+                timer.stop();
+
+            } else {
+                cerr << "Error: Invalid data structure for shortest path problem.\n";
+                return;
+            }
+        } else if (algorithm == 1) {
+            if (dataStructure == 0) {
+                graph = fileHandler.getGraphListFromFile(true);
+
+                timer.start();
+                BellmanFord bellmanFord;
+                resultList = bellmanFord.run(graph, start);
+                shortestPathCost = bellmanFord.getShortestDistance(end);
+                timer.stop();
+
+            } else if (dataStructure == 1) {
+                graphIncidence = fileHandler.getGraphIncidenceMatrixFromFile(true);
+
+                timer.start();
+                BellmanFordIncidenceMatrix bellmanFordIncidence;
+                resultIncidence = bellmanFordIncidence.run(graphIncidence, start);
+                shortestPathCost = bellmanFordIncidence.getShortestDistance(end);
+                timer.stop();
+
+            } else {
+                cerr << "Error: Invalid data structure for shortest path problem.\n";
+                return;
+            }
+        } else {
+            cerr << "Error: Invalid algorithm for shortest path problem.\n";
+            return;
+        }
+    } else {
+        cerr << "Error: Invalid problem type. Use 0 for MST or 1 for shortest path.\n";
         return;
+    }
+
+    ofstream out(outputFile);
+    if (out.is_open()){
+        out << timer.result() << endl;
+    } else {
+        cerr << "Error: Cannot open output file " << outputFile << endl;
     }
 
 }
@@ -329,12 +452,12 @@ int main(int argc, char* argv[]) {
         processFileMode(problem, algorithm, dataStructure,inputFile, outputFile, start, end);
 
     } else if (mode == "--test") {
-        if (argc < 7) {
+        if (argc < 8) {
             cerr << "Error: Not enough arguments for test mode.\n";
             printHelp();
             return 1;
         }
-
+        std::cout<<argc<<endl;
         int size;
         double density;
 
@@ -351,10 +474,10 @@ int main(int argc, char* argv[]) {
             return 1;
         }
 
-        if (argc == 9) {
+        if (argc >= 10) {
             parseToInt(argv[8], start);
             parseToInt(argv[9], end);
-        } else if (argc == 8) {
+        } else if (argc == 9) {
             parseToInt(argv[8], start);
         }
 
