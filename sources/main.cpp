@@ -164,6 +164,7 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
                 Dijkstra dijkstra;
                 resultList = dijkstra.run(graph, start);
                 shortestPathCost = dijkstra.getShortestDistance(start, end);
+                
                 timer.stop();
                 resultList->printAdjacencyList();
             } else if (dataStructure == 1) {
@@ -288,7 +289,6 @@ int main(int argc, char* argv[]) {
         printHelp();
         return 0;
     }
-    cout << argc << endl;
     string mode = argv[1];
     int problem, algorithm, dataStructure, start = 0, end = -1;
 
@@ -325,7 +325,7 @@ int main(int argc, char* argv[]) {
         } else {
             if (!parseToInt(argv[6], start)) outputFile = argv[6];    
         }    
-        if (end!=-1)end--;
+        // if (end!=-1)end--;
         processFileMode(problem, algorithm, dataStructure,inputFile, outputFile, start, end);
 
     } else if (mode == "--test") {

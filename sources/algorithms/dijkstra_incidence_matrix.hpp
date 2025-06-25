@@ -86,8 +86,9 @@ public:
     int getShortestDistance(int start, int end) const {
         if (!shortestPaths) return -1;
         int n = shortestPaths->getNumVertices();
-        if (start < 0 || end < 0 || start >= n || end >= n) return -1;
-
+        if (start < 0 || start >= n || end >= n) return -1;
+        if (end < 0) end = n - 1;
+        
         int* dist = new int[n];
         for (int i = 0; i < n; ++i) dist[i] = std::numeric_limits<int>::max();
         dist[start] = 0;

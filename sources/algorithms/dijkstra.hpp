@@ -73,11 +73,11 @@ public:
 
 
     // Zwraca koszt najkrótszej ścieżki do danego wierzchołka
-    int getShortestDistance(int start, int end) const {
+    int getShortestDistance(int start, int end) {
         if (!shortestPaths) return -1;
         int n = shortestPaths->getNumVertices();
-        if (start < 0 || end < 0 || start >= n || end >= n) return -1;
-        // if (end==-1) end = shortestPaths->getNumVertices()-1;
+        if (start < 0 || start >= n || end >= n) return -1;
+        if (end==-1) end = n-1; // jeśli end=-1, to zwracamy ostatni wierzchołek
 
         // BFS lub DFS w wynikowym grafie (najkrótsze ścieżki mają tylko po jednej krawędzi)
         int* dist = new int[n];

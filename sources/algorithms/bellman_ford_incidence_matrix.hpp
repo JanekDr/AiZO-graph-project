@@ -94,6 +94,7 @@ public:
     }
 
     int getShortestDistance(int v) const {
+        if (v == -1) v = numVertices - 1;
         return (v >= 0 && v < numVertices) ? distances[v] : -1;
     }
 
