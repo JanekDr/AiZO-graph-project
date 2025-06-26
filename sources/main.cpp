@@ -70,7 +70,7 @@ void printHelp() {
          << "Displays this help message.\n\n";
 }
 
-void processFileMode(int problem, int algorithm, int dataStructure, const string& inputFile, const string& outputFile, int start = 0, int end = -1) {
+void processFileMode(int problem, int algorithm, int dataStructure, const string& inputFile, const string& outputFile="", int start = 0, int end = -1) {
     FileHandler fileHandler(inputFile);
     Timer timer;
 
@@ -104,11 +104,10 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
                 timer.stop();
 
             } else if (dataStructure == 2) {
-                GraphAdjacencyMatrix* graphMatrix = fileHandler.getGraphMatrixFromFile();
-
+                graphMatrix = fileHandler.getGraphMatrixFromFile();
                 timer.start();
                 PrimMatrix primMatrix;
-                GraphAdjacencyMatrix* resultMatrix = primMatrix.run(graphMatrix);
+                resultMatrix = primMatrix.run(graphMatrix);
                 timer.stop();
 
             } else {
@@ -204,7 +203,8 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
     }
 
     ofstream out(outputFile);
-    if (out.is_open()) {
+    cout<<outputFile<<endl;
+    if (out.is_open() && !outputFile.empty()) {
         if (problem == 0){
            if (resultList != nullptr){
                 out << "MST using adjacency list:\n";
@@ -249,8 +249,6 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
                 cerr << "Error: No results to write to output file.\n";
             }
         }
-    } else {
-        cerr << "Error: Cannot open output file " << outputFile << endl;
     }
     out.close(); 
     delete graph;
@@ -412,11 +410,12 @@ int main(int argc, char* argv[]) {
         printHelp();
         return 0;
     }
+    cout<<argc<<endl;
     string mode = argv[1];
     int problem, algorithm, dataStructure, start = 0, end = -1;
 
     if (mode == "--file") {
-        if (argc < 5) {
+        if (argc < 6) {
             cerr << "Error: Not enough arguments for file mode.\n";
             printHelp();
             return 1;
@@ -445,11 +444,11 @@ int main(int argc, char* argv[]) {
             } else {
                 parseToInt(argv[6], end);
             }
-        } else {
+        } else if (argc == 7) { // tylko outputFile lub start
             if (!parseToInt(argv[6], start)) outputFile = argv[6];    
         }    
         // if (end!=-1)end--;
-        processFileMode(problem, algorithm, dataStructure,inputFile, outputFile, start, end);
+        processFileMode(problem, algorithm, dataStructure, inputFile, outputFile, start, end);
 
     } else if (mode == "--test") {
         if (argc < 8) {
