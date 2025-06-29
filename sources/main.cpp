@@ -259,7 +259,8 @@ void processFileMode(int problem, int algorithm, int dataStructure, const string
     delete resultIncidence;
 }
 
-void processTestMode(int problem, int algorithm, int dataStructure, int size, float density, const string& outputFile, int start = 0, int end = -1) {
+void processTestMode(int problem, int algorithm, int dataStructure, int size, float density, 
+                     const string& outputFile, int start = 0, int end = -1) {
     Timer timer;
 
     GraphGenerator generator;
