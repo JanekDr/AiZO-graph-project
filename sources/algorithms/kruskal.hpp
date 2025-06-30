@@ -7,32 +7,42 @@
 #include "../structures/edge.hpp"
 
 class Kruskal {
+private:
+    int lastCost; // przechowuje koszt ostatniego MST
+
 public:
-    Kruskal() = default;
+    Kruskal() : lastCost(-1) {}
     ~Kruskal() = default;
+
+    // Zwraca koszt ostatniego MST
+    int getLastCost() const {
+        return lastCost;
+    }
 
     // Zwraca MST lub nullptr
     Graph* run(Graph* graph) {
+        lastCost = -1; // Resetuj koszt przed obliczeniami
+        
         if (!graph) return nullptr;
 
         int n = graph->getNumVertices();
         if (n == 0) return nullptr;
 
         // 1. lista krawedzi
-        DynamicArray<Edge>* edges = new DynamicArray<Edge>(n * (n - 1) / 2);  // Maksymalna liczba krawędzi
+        DynamicArray<Edge>* edges = new DynamicArray<Edge>(n * (n - 1) / 2);
         for (int u = 0; u < n; ++u) {
             DynamicArray<Edge>* neighbors = graph->getAdjacencyList(u);
             for (size_t i = 0; i < neighbors->getSize(); ++i) {
                 Edge e = neighbors->get(i);
-                if (u < e.to) {
+                if (u < e.to) {  // Unikamy duplikatów dla grafów nieskierowanych
                     edges->add(Edge(u, e.to, e.weight));
                 }
             }
         }
 
         // 2. Sortujemy krawędzie po wagach (rosnąco)
-        for (int i = 0; i < edges->getSize(); ++i) {
-            for (int j = i + 1; j < edges->getSize(); ++j) {
+        for (size_t i = 0; i < edges->getSize(); ++i) {
+            for (size_t j = i + 1; j < edges->getSize(); ++j) {
                 if (edges->get(i).weight > edges->get(j).weight) {
                     edges->swap(i, j);
                 }
@@ -47,14 +57,19 @@ public:
             rank[i] = 0;
         }
 
-        // 4. Tworzymy MST
+        // 4. Tworzymy MST i liczymy koszt
         Graph* mst = new Graph(n);
+        lastCost = 0; // Inicjalizujemy koszt
+        
         for (size_t i = 0; i < edges->getSize(); ++i) {
             int u = edges->get(i).from;
             int v = edges->get(i).to;
+            int weight = edges->get(i).weight;
+            
             // Jeśli nie tworzymy cyklu, dodajemy krawędź do MST
             if (find(u, parent) != find(v, parent)) {
-                mst->addEdge(u, v, edges->get(i).weight);
+                mst->addEdge(u, v, weight);
+                lastCost += weight; // Dodaj wagę do kosztu
                 unionSets(u, v, parent, rank);
             }
         }
@@ -64,7 +79,7 @@ public:
         delete[] rank;
         delete edges;
 
-        return mst;  // Zwracamy MST
+        return mst;
     }
 
 private:
@@ -94,4 +109,4 @@ private:
     }
 };
 
-#endif
+#endif // KRUSKAL_HPP

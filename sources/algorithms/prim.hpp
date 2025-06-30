@@ -7,12 +7,22 @@
 #include "../structures/edge.hpp"
 
 class Prim {
+private:
+    int lastCost; // Dodajemy prywatną zmienną do przechowywania kosztu
+
 public:
-    Prim() = default;
+    Prim() : lastCost(-1) {} // Inicjalizujemy koszt na -1 (niepoprawny)
     ~Prim() = default;
+
+    // Metoda do pobierania ostatnio obliczonego kosztu MST
+    int getLastCost() const {
+        return lastCost;
+    }
 
     // Zwraca MST lub nullptr
     Graph* run(Graph* graph) {
+        lastCost = -1; // Resetujemy koszt przed obliczeniami
+        
         if (!graph) return nullptr;
 
         int n = graph->getNumVertices();
@@ -62,6 +72,14 @@ public:
                     key[v] = w;
                     parent[v] = u;
                 }
+            }
+        }
+
+        // Oblicz całkowity koszt MST
+        lastCost = 0;
+        for (int v = 0; v < n; v++) {
+            if (inMST[v]) {
+                lastCost += key[v];
             }
         }
 

@@ -7,11 +7,22 @@
 #include "../structures/edge.hpp"
 
 class PrimMatrix {
+private:
+    int lastCost; // przechowuje koszt ostatniego MST
+
 public:
-    PrimMatrix() = default;
+    PrimMatrix() : lastCost(-1) {}
     ~PrimMatrix() = default;
 
+    // Zwraca koszt ostatniego MST
+    int getLastCost() const {
+        return lastCost;
+    }
+
+    // Zwraca wskaźnik na MST lub nullptr
     GraphAdjacencyMatrix* run(GraphAdjacencyMatrix* graphAdjacencyMatrix) {
+        lastCost = -1; // Resetujemy koszt przed obliczeniami
+
         if (!graphAdjacencyMatrix) return nullptr;
 
         int n = graphAdjacencyMatrix->getNumVertices();
@@ -55,6 +66,14 @@ public:
                     key[v] = weight;
                     parent[v] = u;
                 }
+            }
+        }
+
+        // Oblicz koszt MST
+        lastCost = 0;
+        for (int v = 0; v < n; ++v) {
+            if (inMST[v]) {
+                lastCost += key[v];
             }
         }
 

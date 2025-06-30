@@ -16,22 +16,25 @@ private:
 
 public:
     GraphIncidenceMatrix(int vertices, int maxEdges, bool directed = false)
-        : numVertices(vertices), maxEdges(maxEdges), currentEdgeIndex(0), 
-          directed(directed), incidenceMatrix(vertices, nullptr), edges(maxEdges) {
-        
+        : numVertices(vertices),
+        maxEdges(maxEdges),
+        currentEdgeIndex(0),
+        incidenceMatrix(vertices),
+        edges(maxEdges),
+        directed(directed)
+    {
         for (int i = 0; i < vertices; ++i) {
-            DynamicArray<int>* row = new DynamicArray<int>(maxEdges, 0);
-            for (int j = 0; j < maxEdges; ++j)
-                row->add(0);
+            auto* row = new DynamicArray<int>(maxEdges, 0);
             incidenceMatrix.add(row);
         }
     }
 
     ~GraphIncidenceMatrix() {
-        for (int i = 0; i < numVertices; ++i) {
+        for (size_t i = 0; i < incidenceMatrix.getSize(); ++i) {
             delete incidenceMatrix.get(i);
         }
     }
+
 
     void addEdge(int u, int v, int weight) {
         if (currentEdgeIndex >= maxEdges) {

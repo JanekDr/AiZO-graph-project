@@ -24,6 +24,7 @@ private:
 
     ~Graph() {
         for (size_t i = 0; i < adjacencyList.getSize(); ++i) {
+            // std::cerr << "Destruktor GraphAdjacencyList!" << std::endl;
             delete adjacencyList.get(i);
         }
     }
@@ -50,7 +51,7 @@ private:
         for (int i = 0; i < numVertices; ++i) {
             std::cout << "V" << i << ": ";
             DynamicArray<Edge>* list = adjacencyList.get(i);
-            for (int j = 0; j < list->getSize(); ++j) {
+            for (size_t j = 0; j < list->getSize(); ++j) {
                 Edge e = list->get(j);
                 std::cout << "(" << e.to << ", " << e.weight << ") ";
             }
@@ -61,9 +62,13 @@ private:
     void printAdjacencyList(std::ostream& out = std::cout) const{
         out<<"Lista sasiedztwa:\n";
         for (int i = 0; i < numVertices; ++i) {
+            // std::cerr << "adjacencyList.getSize() = " << adjacencyList.getSize() << ", i = " << i << std::endl;
             out << "V" << i << ": ";
             DynamicArray<Edge>* list = adjacencyList.get(i);
-            for (int j = 0; j < list->getSize(); ++j) {
+            if (list == nullptr) {
+                std::cerr << "adjacencyList[" << i << "] == nullptr!" << std::endl;
+            }
+            for (size_t j = 0; j < list->getSize(); ++j) {
                 Edge e = list->get(j);
                 out << "(" << e.to << ", " << e.weight << ") ";
             }

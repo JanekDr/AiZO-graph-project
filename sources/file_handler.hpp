@@ -8,17 +8,15 @@
 #include "structures/graph_adjacency_matrix.hpp"
 #include "structures/graph_incidence_matrix.hpp"
 
-using namespace std;
-
 class FileHandler {
 private:
-    ifstream inputFile;
+    std::ifstream inputFile;
 
 public:
-    FileHandler(const string& inputFilename) {
+    FileHandler(const std::string& inputFilename) {
         inputFile.open(inputFilename);
         if (!inputFile) {
-            cerr << "Błąd: Nie można otworzyć pliku wejściowego!" << endl;
+            std::cerr << "Błąd: Nie można otworzyć pliku wejściowego!" << std::endl;
         }
     }
 
@@ -28,7 +26,7 @@ public:
 
     Graph* getGraphListFromFile(bool directed = false) {
         if (!inputFile) {
-            cerr << "Błąd: Plik wejściowy nie jest otwarty!" << endl;
+            std::cerr << "Błąd: Plik wejściowy nie jest otwarty!" << std::endl;
             return nullptr;
         }
 
@@ -41,7 +39,7 @@ public:
             int from, to, weight;
             inputFile >> from >> to >> weight;
             if (inputFile.fail()) {
-                cerr << "Błąd: Niepoprawny format danych krawędzi!" << endl;
+                std::cerr << "Błąd: Niepoprawny format danych krawędzi!" << std::endl;
                 delete graph;
                 return nullptr;
             }
@@ -53,17 +51,28 @@ public:
 
     GraphAdjacencyMatrix* getGraphMatrixFromFile(bool directed = false) {
         if (!inputFile) {
-            cerr << "Błąd: Plik wejściowy nie jest otwarty!" << endl;
+            std::cerr << "Błąd: Plik wejściowy nie jest otwarty!" << std::endl;
             return nullptr;
         }
+
+        // Reset pozycji pliku na początek (jeśli plik był już czytany wcześniej)
+        inputFile.clear();
+        inputFile.seekg(0, std::ios::beg);
 
         int numEdges, numVertices;
         inputFile >> numEdges >> numVertices;
 
-        GraphAdjacencyMatrix* graphAdjacencyMatrix = new GraphAdjacencyMatrix(numVertices, numEdges, directed);
+        // UWAGA: przekazujemy numVertices jako oba pierwsze argumenty!
+        GraphAdjacencyMatrix* graphAdjacencyMatrix = new GraphAdjacencyMatrix(numVertices, numVertices, directed);
 
         int u, v, weight;
-        while (inputFile >> u >> v >> weight){
+        for (int i = 0; i < numEdges; ++i) {
+            inputFile >> u >> v >> weight;
+            if (inputFile.fail()) {
+                std::cerr << "Błąd: Niepoprawny format danych krawędzi!" << std::endl;
+                delete graphAdjacencyMatrix;
+                return nullptr;
+            }
             graphAdjacencyMatrix->addEdge(u, v, weight, directed);
         }
 
@@ -73,13 +82,13 @@ public:
     // NOWA METODA: Tworzenie macierzy incydencji
     GraphIncidenceMatrix* getGraphIncidenceMatrixFromFile(bool directed = false) {
         if (!inputFile) {
-            cerr << "Błąd: Plik wejściowy nie jest otwarty!" << endl;
+            std::cerr << "Błąd: Plik wejściowy nie jest otwarty!" << std::endl;
             return nullptr;
         }
 
         // Resetujemy pozycję pliku na początek, jeśli plik był już czytany
         inputFile.clear();
-        inputFile.seekg(0, ios::beg);
+        inputFile.seekg(0, std::ios::beg);
 
         int numEdges, numVertices;
         inputFile >> numEdges >> numVertices;
@@ -90,7 +99,7 @@ public:
         for (int i = 0; i < numEdges; ++i) {
             inputFile >> u >> v >> weight;
             if (inputFile.fail()) {
-                cerr << "Błąd: Niepoprawny format danych krawędzi!" << endl;
+                std::cerr << "Błąd: Niepoprawny format danych krawędzi!" << std::endl;
                 delete incidenceMatrix;
                 return nullptr;
             }
@@ -101,4 +110,4 @@ public:
     }
 };
 
-#endif
+#endif // FILEHANDLER_HPP

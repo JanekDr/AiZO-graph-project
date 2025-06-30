@@ -95,7 +95,24 @@ def badanieMST_size50():
                         writer.writerow([0, algorithm, data_structure, 50, density, time, timestamp])
     output_file.close()
 
+def badanieSPsize900():
+    # int problem, int algorithm, int dataStructure, int size, float density, const string& outputFile, int start = 0, int end = -1
+    output_file = open("results/badanieSPwyniki-D5099-900.csv", mode="w", newline="")
+    writer = csv.writer(output_file, delimiter=";")
+    writer.writerow(["problem", "algorithm", "data_structure", "size", "density","start", "end", "time_ms", "timestamp"])
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    for j in range(1):
+        subprocess.run(["../sources/main.exe", "--test", "1", "1", "1", "900", "0.99", "../data/execution_time.txt"], capture_output=True, text=True)
+        with open("../data/execution_time.txt", "r") as file:
+            time = file.readline().strip()
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            writer.writerow([1, 1, 1, 900, 0.99, 0, -1, time, timestamp])
+    output_file.close()
+
 # badanieMST()
 # badanieMST_reszta()
 # badanieMST_reszta2()
-badanieShortestPath()
+# badanieShortestPath()
+# badanieMST_size50()
+badanieSPsize900()

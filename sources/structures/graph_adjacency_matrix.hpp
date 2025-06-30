@@ -15,19 +15,12 @@ private:
 public:
     // Konstruktor, inicjalizujący macierz sasiedztwa
     GraphAdjacencyMatrix(int vertices, int edges, bool directed = false)
-        : numVertices(vertices), numEdges(edges), directed(directed),adjacencyMatrix(vertices, nullptr)
-    {
-        for (int i = 0; i < vertices; ++i)
-            adjacencyMatrix.add(nullptr); // zwiększamy size
-
+        : numVertices(vertices), numEdges(edges), adjacencyMatrix(vertices), directed(directed) {
         for (int i = 0; i < vertices; ++i) {
             DynamicArray<int>* row = new DynamicArray<int>(edges, 0);
-            for (int j = 0; j < edges; ++j)
-                row->add(0);  // ręczne wypełnienie, by size == edges
-            adjacencyMatrix.set(i, row);
+            adjacencyMatrix.add(row);
         }
     }
-
 
 
 

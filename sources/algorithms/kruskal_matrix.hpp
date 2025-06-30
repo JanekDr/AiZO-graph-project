@@ -7,18 +7,25 @@
 #include "../structures/dynamic_array.hpp"
 
 class KruskalMatrix {
+private:
+    int lastCost;
+
 public:
-    KruskalMatrix() = default;
+    KruskalMatrix() : lastCost(-1) {}
     ~KruskalMatrix() = default;
 
+    int getLastCost() const {
+        return lastCost;
+    }
+
     GraphAdjacencyMatrix* run(GraphAdjacencyMatrix* graphAdjacencyMatrix) {
+        lastCost = -1; 
+
         if (!graphAdjacencyMatrix) return nullptr;
 
-        int 
-      n = graphAdjacencyMatrix->getNumVertices();
+        int n = graphAdjacencyMatrix->getNumVertices();
         if (n == 0) return nullptr;
 
-        // Zbieramy wszystkie krawedzie z macierzy incydencji
         DynamicArray<Edge>* edges = new DynamicArray<Edge>(n * (n - 1) / 2);
         for (int u = 0; u < n; ++u) {
             DynamicArray<int>* row = graphAdjacencyMatrix->getAdjacencyMatrix(u);
@@ -30,9 +37,8 @@ public:
             }
         }
 
-        // Sortowanie krawędzi po wagach rosnąco
-        for (int i = 0; i < edges->getSize(); ++i) {
-            for (int j = i + 1; j < edges->getSize(); ++j) {
+        for (size_t i = 0; i < edges->getSize(); ++i) {
+            for (size_t j = i + 1; j < edges->getSize(); ++j) {
                 if (edges->get(i).weight > edges->get(j).weight) {
                     edges->swap(i, j);
                 }
@@ -47,13 +53,16 @@ public:
             rank[i] = 0;
         }
 
-        // Tworzymy wynikowy graf
         GraphAdjacencyMatrix* mst = new GraphAdjacencyMatrix(n, edges->getSize(), false);
+        lastCost = 0; // Inicjalizujemy koszt
+
         for (size_t i = 0; i < edges->getSize(); ++i) {
             int u = edges->get(i).from;
             int v = edges->get(i).to;
+            int weight = edges->get(i).weight;
             if (find(u, parent) != find(v, parent)) {
-                mst->addEdge(u, v, edges->get(i).weight);
+                mst->addEdge(u, v, weight);
+                lastCost += weight; // Dodajemy wagę do kosztu MST
                 unionSets(u, v, parent, rank);
             }
         }

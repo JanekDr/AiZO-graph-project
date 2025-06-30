@@ -28,7 +28,7 @@ public:
         for (int i = 1; i < numVertices; ++i) {
             for (int u = 0; u < numVertices; ++u) {
                 auto* neighbors = graph->getAdjacencyList(u);
-                for (int j = 0; j < neighbors->getSize(); ++j) {
+                for (size_t j = 0; j < neighbors->getSize(); ++j) {
                     Edge e = neighbors->get(j);
                     if (distances[u] != std::numeric_limits<int>::max() &&
                         distances[u] + e.weight < distances[e.to]) {
@@ -42,7 +42,7 @@ public:
         negativeCycle = false;
         for (int u = 0; u < numVertices; ++u) {
             auto* neighbors = graph->getAdjacencyList(u);
-            for (int j = 0; j < neighbors->getSize(); ++j) {
+            for (size_t j = 0; j < neighbors->getSize(); ++j) {
                 Edge e = neighbors->get(j);
                 if (distances[u] != std::numeric_limits<int>::max() &&
                     distances[u] + e.weight < distances[e.to]) {
@@ -55,7 +55,7 @@ public:
         Graph* result = new Graph(numVertices);
         for (int u = 0; u < numVertices; ++u) {
             auto* neighbors = graph->getAdjacencyList(u);
-            for (int j = 0; j < neighbors->getSize(); ++j) {
+            for (size_t j = 0; j < neighbors->getSize(); ++j) {
                 Edge e = neighbors->get(j);
                 if (distances[e.to] == distances[u] + e.weight) {
                     result->addEdge(u, e.to, e.weight);

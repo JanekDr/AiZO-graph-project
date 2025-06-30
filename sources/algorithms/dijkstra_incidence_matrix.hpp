@@ -10,21 +10,15 @@
 class DijkstraIncidenceMatrix {
 public:
     DijkstraIncidenceMatrix() = default;
-    ~DijkstraIncidenceMatrix() {
-        if (shortestPaths) delete shortestPaths;
-    }
+    ~DijkstraIncidenceMatrix() = default;
 
+    // Zwraca nowy graf reprezentujący najkrótsze ścieżki z wierzchołka start
     GraphIncidenceMatrix* run(GraphIncidenceMatrix* graphMatrix, int start) {
         if (!graphMatrix) return nullptr;
 
         int n = graphMatrix->getNumVertices();
         int m = graphMatrix->getNumEdges();
         if (start < 0 || start >= n) return nullptr;
-
-        if (shortestPaths) {
-            delete shortestPaths;
-            shortestPaths = nullptr;
-        }
 
         int* dist = new int[n];
         bool* visited = new bool[n];
@@ -68,11 +62,11 @@ public:
             }
         }
 
-        shortestPaths = new GraphIncidenceMatrix(n, n * n, graphMatrix->isDirected());
+        GraphIncidenceMatrix* result = new GraphIncidenceMatrix(n, n * n, graphMatrix->isDirected());
         for (int v = 0; v < n; ++v) {
             if (prev[v] != -1) {
                 int weight = dist[v] - dist[prev[v]];
-                shortestPaths->addEdge(prev[v], v, weight);
+                result->addEdge(prev[v], v, weight);
             }
         }
 
@@ -80,15 +74,16 @@ public:
         delete[] visited;
         delete[] prev;
 
-        return shortestPaths;
+        return result;
     }
 
-    int getShortestDistance(int start, int end) const {
+    // Zwraca koszt najkrótszej ścieżki do danego wierzchołka w grafie wynikowym
+    int getShortestDistance(const GraphIncidenceMatrix* shortestPaths, int start, int end) const {
         if (!shortestPaths) return -1;
         int n = shortestPaths->getNumVertices();
         if (start < 0 || start >= n || end >= n) return -1;
         if (end < 0) end = n - 1;
-        
+
         int* dist = new int[n];
         for (int i = 0; i < n; ++i) dist[i] = std::numeric_limits<int>::max();
         dist[start] = 0;
@@ -124,8 +119,6 @@ public:
     }
 
 private:
-    GraphIncidenceMatrix* shortestPaths = nullptr;
-
     int minDistance(int* dist, bool* visited, int n) {
         int min = std::numeric_limits<int>::max(), min_index = -1;
         for (int v = 0; v < n; ++v) {

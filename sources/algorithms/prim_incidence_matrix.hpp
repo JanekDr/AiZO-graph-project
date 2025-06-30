@@ -7,11 +7,21 @@
 #include "../structures/edge.hpp"
 
 class PrimIncidenceMatrix {
+private:
+    int lastCost; // przechowuje koszt ostatniego MST
+
 public:
-    PrimIncidenceMatrix() = default;
+    PrimIncidenceMatrix() : lastCost(-1) {}
     ~PrimIncidenceMatrix() = default;
 
+    // Zwraca koszt ostatniego MST
+    int getLastCost() const {
+        return lastCost;
+    }
+
     GraphIncidenceMatrix* run(GraphIncidenceMatrix* graphIncidenceMatrix) {
+        lastCost = -1; // Resetujemy koszt przed obliczeniami
+
         if (!graphIncidenceMatrix) return nullptr;
 
         int n = graphIncidenceMatrix->getNumVertices();
@@ -53,13 +63,13 @@ public:
             // Przejrzyj wszystkie krawędzie w macierzy incydencji
             for (int edgeIdx = 0; edgeIdx < m; ++edgeIdx) {
                 int uValue = graphIncidenceMatrix->getIncidenceValue(u, edgeIdx);
-                
+
                 // Sprawdź czy wierzchołek u jest incydentny z tą krawędzią
                 if (uValue != 0) {
                     // Znajdź drugi wierzchołek tej krawędzi
                     int v = -1;
                     int weight = 0;
-                    
+
                     for (int vertex = 0; vertex < n; ++vertex) {
                         if (vertex != u) {
                             int vValue = graphIncidenceMatrix->getIncidenceValue(vertex, edgeIdx);
@@ -68,23 +78,29 @@ public:
                                 // Dla grafu nieskierowanego waga to wartość bezwzględna
                                 // Dla grafu skierowanego sprawdzamy kierunek
                                 if (graphIncidenceMatrix->isDirected()) {
-                                    // Graf skierowany: ujemna wartość = źródło, dodatnia = cel
                                     weight = (uValue < 0) ? -uValue : uValue;
                                 } else {
-                                    // Graf nieskierowany: waga to wartość bezwzględna
                                     weight = (uValue > 0) ? uValue : -uValue;
                                 }
                                 break;
                             }
                         }
                     }
-                    
+
                     // Aktualizuj klucz sąsiedniego wierzchołka
                     if (v != -1 && !inMST[v] && weight < key[v]) {
                         key[v] = weight;
                         parent[v] = u;
                     }
                 }
+            }
+        }
+
+        // Oblicz koszt MST
+        lastCost = 0;
+        for (int v = 0; v < n; ++v) {
+            if (inMST[v]) {
+                lastCost += key[v];
             }
         }
 
@@ -108,20 +124,6 @@ public:
         delete[] parent;
 
         return mst;
-    }
-
-private:
-    // Metoda pomocnicza do sprawdzania czy graf jest skierowany
-    bool isGraphDirected(GraphIncidenceMatrix* graph) {
-        // Sprawdź czy istnieją wartości ujemne w macierzy
-        for (int i = 0; i < graph->getNumVertices(); ++i) {
-            for (int j = 0; j < graph->getNumEdges(); ++j) {
-                if (graph->getIncidenceValue(i, j) < 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 };
 

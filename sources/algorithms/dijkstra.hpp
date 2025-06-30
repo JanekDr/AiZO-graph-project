@@ -9,21 +9,14 @@
 class Dijkstra {
 public:
     Dijkstra() = default;
-    ~Dijkstra() {
-        if (shortestPaths) delete shortestPaths;
-    }
+    ~Dijkstra() = default; // nie zarządzasz już żadnym wskaźnikiem
 
-    // Zwraca graf reprezentujący najkrótsze ścieżki z wierzchołka start
+    // Zwraca nowy graf reprezentujący najkrótsze ścieżki z wierzchołka start
     Graph* run(Graph* graph, int start=0) {
         if (!graph) return nullptr;
 
         int n = graph->getNumVertices();
         if (start < 0 || start >= n) return nullptr;
-
-        if (shortestPaths) {
-            delete shortestPaths;
-            shortestPaths = nullptr;
-        }
 
         int* dist = new int[n];
         bool* visited = new bool[n];
@@ -53,13 +46,13 @@ public:
             }
         }
 
-        shortestPaths = new Graph(n);
+        Graph* result = new Graph(n);
         for (int v = 0; v < n; ++v) {
             if (prev[v] != -1 && dist[v] != std::numeric_limits<int>::max()) {
                 int u = prev[v];
                 if (u >= 0 && u < n) {
                     int weight = dist[v] - dist[u];
-                    shortestPaths->addEdge(u, v, weight);
+                    result->addEdge(u, v, weight);
                 }
             }
         }
@@ -68,18 +61,16 @@ public:
         delete[] prev;
         delete[] dist;
 
-        return shortestPaths;
+        return result;
     }
 
-
-    // Zwraca koszt najkrótszej ścieżki do danego wierzchołka
-    int getShortestDistance(int start, int end) {
+    // Zwraca koszt najkrótszej ścieżki do danego wierzchołka w grafie wynikowym
+    int getShortestDistance(Graph* shortestPaths, int start, int end) {
         if (!shortestPaths) return -1;
         int n = shortestPaths->getNumVertices();
         if (start < 0 || start >= n || end >= n) return -1;
-        if (end==-1) end = n-1; // jeśli end=-1, to zwracamy ostatni wierzchołek
+        if (end == -1) end = n - 1;
 
-        // BFS lub DFS w wynikowym grafie (najkrótsze ścieżki mają tylko po jednej krawędzi)
         int* dist = new int[n];
         for (int i = 0; i < n; ++i) dist[i] = std::numeric_limits<int>::max();
         dist[start] = 0;
@@ -99,8 +90,6 @@ public:
     }
 
 private:
-    Graph* shortestPaths = nullptr;
-
     int minDistance(int* dist, bool* visited, int n) {
         int min = std::numeric_limits<int>::max(), min_index = -1;
         for (int v = 0; v < n; ++v) {
